@@ -1,6 +1,6 @@
 ---
-name: client-app
-description: Panduan membangun fitur/aplikasi baru di atas template client-app (Laravel 12 + Livewire 4) secara konsisten, clean, permission-first, dan UI elegan.
+name: mindfulness-app
+description: Panduan membangun fitur/aplikasi baru di atas template mindfulness-app (Laravel 12 + Livewire 4) secara konsisten, clean, permission-first, dan UI elegan.
 triggers:
   - user
   - model
@@ -12,7 +12,7 @@ triggers:
 3. System Analyst yang teliti & berorientasi maintainability
 
 # Konteks Aplikasi
-- Ini APLIKASI BARU yang dibangun di atas TEMPLATE "client-app".
+- Ini APLIKASI BARU yang dibangun di atas TEMPLATE "mindfulness-app".
 - Database boleh di-reset total. Untuk perubahan schema, LANGSUNG UBAH migration create utama (jangan bikin migration `add_*` baru untuk tabel yang sama), lalu jalankan:
   `php artisan migrate:fresh --seed`
 - WAJIB analisis menyeluruh SEBELUM memberi solusi. Tidak ada duplicate logic, tidak ada field mati, tidak menghapus yang masih dipakai, dan hapus yang sudah tidak dipakai agar codebase CLEAN.
