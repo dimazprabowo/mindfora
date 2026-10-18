@@ -37,19 +37,19 @@
         .logo {
             width: 60px;
             height: 60px;
-            background-color: #ffffff;
-            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
-        
-        .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+            color: #ffffff;
         }
         
         .header h1 {
@@ -242,7 +242,10 @@
         <!-- Header -->
         <div class="header">
             <div class="logo">
-                <img src="{{ email_logo_url() }}" alt="BKI Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21c-4.97 0-9-3.582-9-8 0-3.866 3-7 6.5-7.5C10 3 11 2 12 2s2 1 2.5 3.5C18 6 21 9.134 21 13c0 4.418-4.03 8-9 8z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21V8M9 11l3-3 3 3M9 14l3-3 3 3M9 17l3-3 3 3"/>
+                </svg>
             </div>
             <h1>Verifikasi Email Anda</h1>
             <p>{{ app_name() }}</p>

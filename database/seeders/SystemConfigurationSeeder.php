@@ -14,7 +14,7 @@ class SystemConfigurationSeeder extends Seeder
             [
                 'key' => 'app.name',
                 'category' => 'general',
-                'value' => 'Boilerplate',
+                'value' => 'Mindfulness App',
                 'data_type' => 'string',
                 'description' => 'Nama aplikasi',
                 'is_editable' => true,
@@ -29,7 +29,7 @@ class SystemConfigurationSeeder extends Seeder
                 'is_editable' => true,
                 'is_active' => true,
             ],
-            
+
             // Registration configurations
             [
                 'key' => 'registration.deadline',

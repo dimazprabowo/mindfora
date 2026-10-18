@@ -8,9 +8,7 @@
 
         <title>{{ $title ? $title . ' - ' . config('app.name', 'Laravel') : config('app.name', 'Laravel') }}</title>
 
-        <!-- Favicon -->
-        <link rel="icon" type="image/webp" href="{{ asset('images/bki-main.webp') }}">
-        <link rel="apple-touch-icon" href="{{ asset('images/bki-main.webp') }}">
+        <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

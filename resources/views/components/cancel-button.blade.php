@@ -1,6 +1,6 @@
 @props([
     'target' => null,
-    'label' => 'Batal',
+    'label' => __('common.cancel'),
     'loadingText' => 'loading...',
     'icon' => false,
     'size' => 'lg',
@@ -24,7 +24,7 @@
 
     $baseClass = $icon
         ? 'p-1.5 rounded-lg text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition disabled:opacity-50'
-        : "inline-flex items-center justify-center font-medium rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed {$sizeClass}";
+        : "inline-flex items-center justify-center font-medium rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:focus:ring-offset-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed {$sizeClass}";
 @endphp
 
 @if($target)

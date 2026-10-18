@@ -2,9 +2,9 @@
     {{-- Header --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Notifikasi</h2>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ __('notifications.title') }}</h2>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                {{ $unreadCount }} belum dibaca
+                {{ __('notifications.unread_count', ['count' => $unreadCount]) }}
             </p>
         </div>
         <div class="flex items-center space-x-2">
@@ -12,24 +12,24 @@
                 <x-loading-button wire:click="markAllAsRead"
                     target="markAllAsRead"
                     icon="check" iconClass="w-4 h-4"
-                    class="px-3 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30"
-                    loadingText="Memproses...">
-                    Tandai Semua Dibaca
+                    class="px-3 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/30"
+                    loadingText="{{ __('common.processing') }}">
+                    {{ __('notifications.mark_all_read') }}
                 </x-loading-button>
             @endif
             <x-loading-button wire:click="confirmDeleteAllRead"
                 target="confirmDeleteAllRead"
                 icon="delete" iconClass="w-4 h-4"
                 class="px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30"
-                loadingText="Memproses...">
-                Hapus Sudah Dibaca
+                loadingText="{{ __('common.processing') }}">
+                {{ __('notifications.delete_read') }}
             </x-loading-button>
         </div>
     </div>
 
     {{-- Filter Tabs --}}
     <div class="flex items-center space-x-1 mb-4 bg-gray-100 dark:bg-gray-800 rounded-lg p-1 w-fit">
-        @foreach(['all' => 'Semua', 'unread' => 'Belum Dibaca', 'read' => 'Sudah Dibaca'] as $key => $label)
+        @foreach(['all' => __('common.all'), 'unread' => __('notifications.unread'), 'read' => __('notifications.read')] as $key => $label)
             <button wire:click="$set('filter', '{{ $key }}')"
                     class="px-4 py-2 text-sm font-medium rounded-md transition-colors
                            {{ $filter === $key ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white' }}">
@@ -42,7 +42,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-700">
         @forelse($notifications as $notification)
             <div wire:key="notif-full-{{ $notification->id }}"
-                 class="flex items-start gap-4 px-4 sm:px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors {{ is_null($notification->read_at) ? 'bg-blue-50/30 dark:bg-blue-900/5' : '' }}">
+                 class="flex items-start gap-4 px-4 sm:px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors {{ is_null($notification->read_at) ? 'bg-primary-50/30 dark:bg-primary-900/5' : '' }}">
                 {{-- Icon --}}
                 <div class="flex-shrink-0 mt-0.5">
                     @switch($notification->type)
@@ -68,8 +68,8 @@
                             </div>
                             @break
                         @default
-                            <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                             </div>
@@ -83,7 +83,7 @@
                             <p class="text-sm font-semibold text-gray-900 dark:text-white">
                                 {{ $notification->title }}
                                 @if(is_null($notification->read_at))
-                                    <span class="inline-block w-2 h-2 bg-blue-500 rounded-full ml-1"></span>
+                                    <span class="inline-block w-2 h-2 bg-primary-500 rounded-full ml-1"></span>
                                 @endif
                             </p>
                             <p class="text-sm text-gray-600 dark:text-gray-300 mt-0.5">
@@ -101,15 +101,15 @@
                                     target="markAsRead({{ $notification->id }})"
                                     variant="icon-gray" icon="check" iconClass="w-4 h-4"
                                     wire:key="btn-read-{{ $notification->id }}"
-                                    class="hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                                    title="Tandai dibaca" />
+                                    class="hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20"
+                                    title="{{ __('notifications.mark_read') }}" />
                             @endif
                             @if($notification->action_url)
                                 <a href="{{ $notification->action_url }}"
                                    wire:navigate
                                    x-data="{ loading: false }"
                                    @click="loading = true"
-                                   title="Buka"
+                                   title="{{ __('notifications.open') }}"
                                    class="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
                                     <span class="relative inline-block w-4 h-4">
                                         <svg x-show="!loading" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,7 +127,7 @@
                                 variant="icon-gray" icon="delete" iconClass="w-4 h-4"
                                 wire:key="btn-delete-{{ $notification->id }}"
                                 class="hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
-                                title="Hapus" />
+                                title="{{ __('common.delete') }}" />
                         </div>
                     </div>
                 </div>
@@ -137,14 +137,14 @@
                 <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                 </svg>
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-1">Tidak ada notifikasi</h3>
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-1">{{ __('notifications.no_notifications') }}</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">
                     @if($filter === 'unread')
-                        Semua notifikasi sudah dibaca.
+                        {{ __('notifications.all_read') }}
                     @elseif($filter === 'read')
-                        Belum ada notifikasi yang sudah dibaca.
+                        {{ __('notifications.no_read_notifications') }}
                     @else
-                        Anda belum memiliki notifikasi.
+                        {{ __('notifications.no_notifications_description') }}
                     @endif
                 </p>
             </div>
@@ -162,8 +162,8 @@
     <x-delete-modal
         :show="$showDeleteModal"
         wire:model="showDeleteModal"
-        title="Hapus Notifikasi"
-        message="Apakah Anda yakin ingin menghapus notifikasi"
+        title="{{ __('notifications.delete_notification_title') }}"
+        message="{{ __('notifications.confirm_delete_notification') }}"
         :itemName="$deletingNotificationTitle"
         confirmMethod="deleteNotification" />
 
@@ -171,7 +171,7 @@
     <x-delete-modal
         :show="$showDeleteAllModal"
         wire:model="showDeleteAllModal"
-        title="Hapus Notifikasi Sudah Dibaca"
-        message="Apakah Anda yakin ingin menghapus semua notifikasi yang sudah dibaca?"
+        title="{{ __('notifications.delete_read_title') }}"
+        message="{{ __('notifications.confirm_delete_all_read') }}"
         confirmMethod="deleteAllRead" />
 </div>

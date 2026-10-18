@@ -2,21 +2,25 @@
 
 namespace App\Services;
 
+use App\Models\Company;
 use App\Models\User;
 use App\Traits\HasDynamicLike;
+use App\Traits\SortsQuery;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserService
 {
-    use HasDynamicLike;
+    use HasDynamicLike, SortsQuery;
 
     public function getFilteredUsers(
         ?string $search = null,
         ?string $roleFilter = null,
         ?string $isActive = null,
-        int $perPage = 15
+        int $perPage = 15,
+        ?string $sortField = null,
+        string $sortDir = 'asc'
     ): LengthAwarePaginator {
         $query = User::with(['roles', 'company']);
 
@@ -24,9 +28,9 @@ class UserService
             $operator = $this->getLikeOperator();
             $query->where(function ($q) use ($search, $operator) {
                 $q->where('name', $operator, "%{$search}%")
-                  ->orWhere('email', $operator, "%{$search}%")
-                  ->orWhere('phone', $operator, "%{$search}%")
-                  ->orWhere('position', $operator, "%{$search}%");
+                    ->orWhere('email', $operator, "%{$search}%")
+                    ->orWhere('phone', $operator, "%{$search}%")
+                    ->orWhere('position', $operator, "%{$search}%");
             });
         }
 
@@ -38,7 +42,17 @@ class UserService
             $query->where('is_active', $isActive === '1');
         }
 
-        return $query->orderBy('name')->paginate($perPage);
+        $sortable = [
+            'name' => 'users.name',
+            'email' => 'users.email',
+            'company' => '('.Company::select('name')
+                ->whereColumn('companies.id', 'users.company_id')->limit(1)->toSql().')',
+            'is_active' => 'users.is_active',
+        ];
+
+        $this->applySorting($query, $sortable, $sortField, $sortDir, 'name', 'asc', 'users.id');
+
+        return $query->paginate($perPage);
     }
 
     public function create(array $data, array $roles): User
@@ -70,14 +84,14 @@ class UserService
             'is_active' => $data['is_active'] ?? true,
         ];
 
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $updateData['password'] = Hash::make($data['password']);
         }
 
         $user->update($updateData);
         $user->syncRoles($roles);
 
-        if (!$user->is_active) {
+        if (! $user->is_active) {
             $this->invalidateSessions($user);
         }
 
@@ -91,9 +105,9 @@ class UserService
 
     public function toggleActive(User $user): User
     {
-        $user->update(['is_active' => !$user->is_active]);
+        $user->update(['is_active' => ! $user->is_active]);
 
-        if (!$user->is_active) {
+        if (! $user->is_active) {
             $this->invalidateSessions($user);
         }
 

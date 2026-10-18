@@ -1,13 +1,13 @@
 <x-auth-shell>
     <div class="mb-8">
-        <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
             </svg>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white text-center">Verifikasi Email</h2>
+        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white text-center">{{ __('auth.verify_email_title') }}</h2>
         <p class="text-gray-600 dark:text-gray-400 mt-2 text-sm sm:text-base text-center">
-            Terima kasih telah mendaftar! Silakan verifikasi email Anda dengan mengklik link yang kami kirimkan. Jika tidak menerima email, kami akan dengan senang hati mengirimkan ulang.
+            {{ __('auth.verify_email_subtitle') }}
         </p>
     </div>
 
@@ -18,7 +18,7 @@
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                 </svg>
                 <p class="text-sm text-green-700 dark:text-green-300">
-                    Link verifikasi baru telah dikirim ke alamat email Anda.
+                    {{ __('auth.verification_link_sent') }}
                 </p>
             </div>
         </div>
@@ -26,7 +26,7 @@
 
     <div class="space-y-4">
         <button wire:click="sendVerification"
-            class="w-full inline-flex items-center justify-center px-4 py-3 bg-blue-600 border border-transparent rounded-lg font-semibold text-base text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full inline-flex items-center justify-center px-4 py-3 bg-primary-600 border border-transparent rounded-lg font-semibold text-base text-white uppercase tracking-widest hover:bg-primary-700 focus:bg-primary-700 active:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
             wire:loading.attr="disabled"
             wire:target="sendVerification">
 
@@ -42,12 +42,12 @@
 
                 <!-- TEKS NORMAL -->
                 <span wire:loading.remove wire:target="sendVerification">
-                    Kirim Ulang Email Verifikasi
+                    {{ __('auth.resend_verification_email') }}
                 </span>
 
                 <!-- TEKS LOADING -->
                 <span wire:loading wire:target="sendVerification">
-                    Mengirim...
+                    {{ __('auth.sending') }}
                 </span>
 
             </span>
@@ -75,12 +75,12 @@
 
                 <!-- TEKS NORMAL -->
                 <span wire:loading.remove wire:target="logout">
-                    Logout & Kembali ke Login
+                    {{ __('auth.logout_and_back') }}
                 </span>
 
                 <!-- TEKS LOADING -->
                 <span wire:loading wire:target="logout">
-                    Logout...
+                    {{ __('auth.logging_out') }}
                 </span>
 
             </span>

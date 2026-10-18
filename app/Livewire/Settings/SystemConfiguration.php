@@ -6,8 +6,8 @@ use App\Enums\ConfigCategory;
 use App\Enums\ConfigDataType;
 use App\Exports\SystemConfigurationsExport;
 use App\Livewire\Traits\HasNotification;
+use App\Livewire\Traits\HasTableSorting;
 use App\Models\SystemConfiguration as SystemConfigModel;
-use App\Traits\HasDynamicLike;
 use App\Services\SystemConfigurationService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -17,35 +17,47 @@ use Livewire\WithPagination;
 
 class SystemConfiguration extends Component
 {
-    use WithPagination, AuthorizesRequests, HasNotification, HasDynamicLike;
+    use AuthorizesRequests, HasNotification, HasTableSorting, WithPagination;
 
     protected $paginationTheme = 'tailwind';
 
     public $search = '';
+
     public $isActiveFilter = '';
+
     public bool $filterChanged = false;
+
     public $showModal = false;
+
     public $editMode = false;
-    
+
     // Form fields
     public $configId;
+
     public $key;
+
     public $category = 'general';
+
     public $value;
+
     public $data_type = 'string';
+
     public $description;
+
     public $is_editable = true;
+
     public $is_active = true;
 
     public function mount()
     {
         $this->authorize('viewAny', SystemConfigModel::class);
+        $this->sortField = 'category';
     }
 
     public function rules()
     {
         return [
-            'key' => ['required', 'string', 'max:100', $this->editMode ? 'unique:system_configurations,key,' . $this->configId : 'unique:system_configurations,key'],
+            'key' => ['required', 'string', 'max:100', $this->editMode ? 'unique:system_configurations,key,'.$this->configId : 'unique:system_configurations,key'],
             'category' => ['required', 'string', Rule::in(ConfigCategory::values())],
             'value' => $this->data_type === 'datetime' ? 'nullable' : 'required',
             'data_type' => ['required', 'string', Rule::in(ConfigDataType::values())],
@@ -87,14 +99,14 @@ class SystemConfiguration extends Component
     {
         $config = SystemConfigModel::findOrFail($id);
         $this->authorize('update', $config);
-        
+
         $this->configId = $config->id;
         $this->key = $config->key;
         $this->category = $config->category instanceof ConfigCategory ? $config->category->value : $config->category;
-        
+
         $dataType = $config->data_type instanceof ConfigDataType ? $config->data_type->value : $config->data_type;
-        
-        if ($dataType === 'datetime' && !empty($config->value)) {
+
+        if ($dataType === 'datetime' && ! empty($config->value)) {
             try {
                 $this->value = \Carbon\Carbon::parse($config->value)->format('Y-m-d\TH:i');
             } catch (\Exception $e) {
@@ -103,12 +115,12 @@ class SystemConfiguration extends Component
         } else {
             $this->value = $config->value;
         }
-        
+
         $this->data_type = $dataType;
         $this->description = $config->description;
         $this->is_editable = $config->is_editable;
         $this->is_active = $config->is_active;
-        
+
         $this->editMode = true;
         $this->showModal = true;
     }
@@ -124,15 +136,15 @@ class SystemConfiguration extends Component
 
         try {
             $value = $this->value;
-            
-            if ($this->data_type === 'datetime' && !empty($value)) {
+
+            if ($this->data_type === 'datetime' && ! empty($value)) {
                 try {
                     $value = \Carbon\Carbon::parse($value)->format('Y-m-d H:i:s');
                 } catch (\Exception $e) {
                     // Keep original value if parsing fails
                 }
             }
-            
+
             $data = [
                 'key' => $this->key,
                 'category' => $this->category,
@@ -194,7 +206,7 @@ class SystemConfiguration extends Component
             'is_editable',
             'is_active',
         ]);
-        
+
         $this->category = ConfigCategory::General->value;
         $this->data_type = ConfigDataType::String->value;
         $this->is_editable = true;
@@ -206,42 +218,38 @@ class SystemConfiguration extends Component
         $this->authorize('exportExcel', SystemConfigModel::class);
 
         return (new SystemConfigurationsExport($this->search, $this->isActiveFilter !== '' ? $this->isActiveFilter : null))
-            ->download('konfigurasi-' . now()->format('Y-m-d-His') . '.xlsx');
+            ->download('konfigurasi-'.now()->format('Y-m-d-His').'.xlsx');
     }
 
     public function exportPdf(SystemConfigurationService $service)
     {
         $this->authorize('exportPdf', SystemConfigModel::class);
 
-        $query = SystemConfigModel::query();
-
-        if ($this->search) {
-            $operator = $this->getLikeOperator();
-            $query->where(function ($q) use ($operator) {
-                $q->where('key', $operator, "%{$this->search}%")
-                  ->orWhere('description', $operator, "%{$this->search}%")
-                  ->orWhere('value', $operator, "%{$this->search}%");
-            });
-        }
-
-        if ($this->isActiveFilter !== null && $this->isActiveFilter !== '') {
-            $query->where('is_active', $this->isActiveFilter === '1');
-        }
-
-        $configurations = $query->orderBy('category')->orderBy('key')->get();
+        $configurations = $service->getFiltered(
+            $this->search,
+            $this->isActiveFilter !== '' ? $this->isActiveFilter : null,
+            perPage: 10000,
+            sortField: $this->sortField,
+            sortDir: $this->sortDir
+        );
 
         $pdf = Pdf::loadView('exports.configurations-pdf', ['configurations' => $configurations]);
         $pdf->setPaper('a4', 'landscape');
 
         return response()->streamDownload(
-            fn () => print($pdf->output()),
-            'konfigurasi-' . now()->format('Y-m-d-His') . '.pdf'
+            fn () => print ($pdf->output()),
+            'konfigurasi-'.now()->format('Y-m-d-His').'.pdf'
         );
     }
 
     public function render(SystemConfigurationService $service)
     {
-        $configurations = $service->getFiltered($this->search, $this->isActiveFilter !== '' ? $this->isActiveFilter : null);
+        $configurations = $service->getFiltered(
+            $this->search,
+            $this->isActiveFilter !== '' ? $this->isActiveFilter : null,
+            sortField: $this->sortField,
+            sortDir: $this->sortDir
+        );
 
         if ($this->filterChanged) {
             $this->notifySuccess("Ditemukan {$configurations->total()} data konfigurasi.");

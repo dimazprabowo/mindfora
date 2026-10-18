@@ -1,15 +1,15 @@
 @props([
     'options' => [],
     'value' => '',
-    'placeholder' => 'Pilih opsi...',
-    'searchPlaceholder' => 'Cari...',
+    'placeholder' => __('common.select_option'),
+    'searchPlaceholder' => __('common.search_placeholder'),
     'name' => '',
     'id' => null,
     'disabled' => false,
     'required' => false,
     'error' => false,
-    'emptyText' => 'Tidak ada data',
-    'noResultText' => 'Tidak ditemukan',
+    'emptyText' => __('common.no_data'),
+    'noResultText' => __('common.not_found'),
 ])
 
 @php
@@ -99,7 +99,7 @@
         x-on:click="toggleDropdown()"
         @if($disabled) disabled @endif
         {{ $attributes->except(['wire:model', 'wire:model.live', 'wire:model.change'])->merge([
-            'class' => 'relative w-full cursor-pointer rounded-lg border bg-white dark:bg-gray-700 py-2.5 pl-4 pr-10 text-left shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ' . 
+            'class' => 'relative w-full cursor-pointer rounded-lg border bg-white dark:bg-gray-700 py-2.5 pl-4 pr-10 text-left shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ' . 
                 ($error ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600') .
                 ($disabled ? ' opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' : ' hover:border-gray-400 dark:hover:border-gray-500')
         ]) }}
@@ -152,7 +152,7 @@
                     x-ref="searchInput"
                     x-on:click.stop
                     placeholder="{{ $searchPlaceholder }}"
-                    class="block w-full rounded-md border-0 py-2 pl-9 pr-3 text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                    class="block w-full rounded-md border-0 py-2 pl-9 pr-3 text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-500"
                     @keydown.enter.prevent="if(filteredOptions.length > 0) selectOption(filteredOptions[0])"
                 >
                 {{-- Clear Search Button --}}
@@ -171,7 +171,7 @@
 
         {{-- Options List --}}
         <ul 
-            class="max-h-60 overflow-auto py-1 text-sm focus:outline-none"
+            class="max-h-60 overflow-auto custom-scrollbar py-1 text-sm focus:outline-none"
             role="listbox"
         >
             {{-- Clear/Empty Option --}}
@@ -185,7 +185,7 @@
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
-                        <span class="text-sm italic">Hapus pilihan</span>
+                        <span class="text-sm italic">{{ __('common.clear_selection') }}</span>
                     </div>
                 </li>
             </template>
@@ -195,7 +195,7 @@
                 <li
                     x-on:click="selectOption(option)"
                     :class="{
-                        'bg-blue-50 dark:bg-blue-900/30': String(value) === String(option.value),
+                        'bg-primary-50 dark:bg-primary-900/30': String(value) === String(option.value),
                         'hover:bg-gray-100 dark:hover:bg-gray-700': String(value) !== String(option.value)
                     }"
                     class="relative cursor-pointer select-none py-2.5 px-4 transition-colors"
@@ -205,7 +205,7 @@
                         <div class="flex-1 min-w-0">
                             <span 
                                 x-text="option.label"
-                                :class="String(value) === String(option.value) ? 'font-semibold text-blue-700 dark:text-blue-300' : 'text-gray-900 dark:text-white'"
+                                :class="String(value) === String(option.value) ? 'font-semibold text-primary-700 dark:text-primary-300' : 'text-gray-900 dark:text-white'"
                                 class="block truncate"
                             ></span>
                             <template x-if="option.sublabel">
@@ -217,7 +217,7 @@
                         </div>
                         {{-- Check Icon --}}
                         <template x-if="String(value) === String(option.value)">
-                            <svg class="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 ml-2" fill="currentColor" viewBox="0 0 20 20">
+                            <svg class="h-5 w-5 text-primary-600 dark:text-primary-400 flex-shrink-0 ml-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                         </template>

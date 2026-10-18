@@ -8,7 +8,7 @@
 
 @php
     $colors = [
-        'blue'   => 'bg-blue-600',
+        'blue'   => 'bg-primary-600',
         'green'  => 'bg-emerald-600',
         'red'    => 'bg-red-600',
         'amber'  => 'bg-yellow-600',
@@ -29,7 +29,7 @@
     @if($isDisabled) disabled @endif
     title="{{ $title }}"
     {{ $attributes->merge([
-        'class' => "relative inline-flex h-6 w-11 items-center justify-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 {$bgClass} {$disabledClass}",
+        'class' => "relative inline-flex h-6 w-11 items-center justify-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 {$bgClass} {$disabledClass}",
     ]) }}
 >
     {{-- Switch knob (absolute positioned, hidden during loading) --}}

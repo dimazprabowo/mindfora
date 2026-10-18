@@ -2,7 +2,7 @@
 <div class="space-y-6">
 
     {{-- Welcome Hero --}}
-    <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-xl shadow-lg p-8 text-white">
+    <div class="bg-gradient-to-br from-primary-600 via-primary-700 to-indigo-800 rounded-xl shadow-lg p-8 text-white">
         <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
             {{-- Avatar --}}
             <div class="flex-shrink-0 w-20 h-20 rounded-full bg-white/20 flex items-center justify-center text-3xl font-bold uppercase ring-4 ring-white/30">
@@ -10,7 +10,7 @@
             </div>
             {{-- Greeting --}}
             <div class="text-center md:text-left">
-                <p class="text-blue-200 text-sm font-medium">Selamat datang kembali</p>
+                <p class="text-primary-200 text-sm font-medium">{{ __('dashboard.welcome_back') }}</p>
                 <h2 class="mt-1 text-3xl font-bold">{{ $authUser->name }}</h2>
                 <div class="mt-3 flex flex-wrap justify-center md:justify-start gap-2">
                     <span class="inline-flex items-center whitespace-nowrap gap-1.5 bg-white/20 rounded-full px-3 py-1 text-xs font-semibold">
@@ -37,17 +37,17 @@
 
     {{-- Profile Detail Card --}}
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">Informasi Akun</h3>
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">{{ __('dashboard.account_info') }}</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
             <div class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                <div class="flex-shrink-0 p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                    <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex-shrink-0 p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
+                    <svg class="w-4 h-4 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                     </svg>
                 </div>
                 <div class="min-w-0">
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Nama Lengkap</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('dashboard.full_name') }}</p>
                     <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $authUser->name }}</p>
                 </div>
             </div>
@@ -59,7 +59,7 @@
                     </svg>
                 </div>
                 <div class="min-w-0">
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Email</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('common.email') }}</p>
                     <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $authUser->email }}</p>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                     </svg>
                 </div>
                 <div class="min-w-0">
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Telepon</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('common.phone') }}</p>
                     <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $authUser->phone }}</p>
                 </div>
             </div>
@@ -86,7 +86,7 @@
                     </svg>
                 </div>
                 <div class="min-w-0">
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Jabatan</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('dashboard.position') }}</p>
                     <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $authUser->position }}</p>
                 </div>
             </div>
@@ -100,7 +100,7 @@
                     </svg>
                 </div>
                 <div class="min-w-0">
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Perusahaan</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('dashboard.company') }}</p>
                     <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $authUser->company->name }}</p>
                 </div>
             </div>
@@ -113,7 +113,7 @@
                     </svg>
                 </div>
                 <div class="min-w-0">
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Role</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('dashboard.role') }}</p>
                     <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $authUserRole }}</p>
                 </div>
             </div>
@@ -125,7 +125,7 @@
                     </svg>
                 </div>
                 <div class="min-w-0">
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Bergabung</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('dashboard.joined') }}</p>
                     <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $appJoinedAt->format('d M Y') }}</p>
                 </div>
             </div>
@@ -137,24 +137,24 @@
     @php
         $shortcuts = [];
         if ($authUser->can('notifications_view')) {
-            $shortcuts[] = ['route' => 'notifications.index', 'label' => 'Notifikasi', 'desc' => 'Lihat kotak masuk', 'color' => 'blue', 'icon' => 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'];
+            $shortcuts[] = ['route' => 'notifications.index', 'label' => __('menu.notifications'), 'desc' => __('dashboard.view_inbox'), 'color' => 'blue', 'icon' => 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'];
         }
         if ($authUser->can('chat_view')) {
-            $shortcuts[] = ['route' => 'chat.index', 'label' => 'Chat', 'desc' => 'Buka percakapan', 'color' => 'emerald', 'icon' => 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'];
+            $shortcuts[] = ['route' => 'chat.index', 'label' => __('menu.chat'), 'desc' => __('dashboard.open_conversation'), 'color' => 'emerald', 'icon' => 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'];
         }
         if ($authUser->can('companies_view')) {
-            $shortcuts[] = ['route' => 'master-data.companies', 'label' => 'Perusahaan', 'desc' => 'Data master perusahaan', 'color' => 'amber', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'];
+            $shortcuts[] = ['route' => 'master-data.companies', 'label' => __('menu.companies'), 'desc' => __('dashboard.company_master_data'), 'color' => 'amber', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'];
         }
     @endphp
 
     @if(!empty($shortcuts))
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">Menu Tersedia</h3>
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">{{ __('dashboard.available_menus') }}</h3>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             @foreach($shortcuts as $shortcut)
             @php
                 $colorMap = [
-                    'blue'    => ['border' => 'hover:border-blue-400 dark:hover:border-blue-500',    'bg' => 'hover:bg-blue-50 dark:hover:bg-blue-900/10',    'icon_bg' => 'bg-blue-100 dark:bg-blue-900/30 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50',    'icon_text' => 'text-blue-600 dark:text-blue-400'],
+                    'blue'    => ['border' => 'hover:border-primary-400 dark:hover:border-primary-500',    'bg' => 'hover:bg-primary-50 dark:hover:bg-primary-900/10',    'icon_bg' => 'bg-primary-100 dark:bg-primary-900/30 group-hover:bg-primary-200 dark:group-hover:bg-primary-900/50',    'icon_text' => 'text-primary-600 dark:text-primary-400'],
                     'emerald' => ['border' => 'hover:border-emerald-400 dark:hover:border-emerald-500', 'bg' => 'hover:bg-emerald-50 dark:hover:bg-emerald-900/10', 'icon_bg' => 'bg-emerald-100 dark:bg-emerald-900/30 group-hover:bg-emerald-200 dark:group-hover:bg-emerald-900/50', 'icon_text' => 'text-emerald-600 dark:text-emerald-400'],
                     'amber'   => ['border' => 'hover:border-amber-400 dark:hover:border-amber-500',   'bg' => 'hover:bg-amber-50 dark:hover:bg-amber-900/10',   'icon_bg' => 'bg-amber-100 dark:bg-amber-900/30 group-hover:bg-amber-200 dark:group-hover:bg-amber-900/50',   'icon_text' => 'text-amber-600 dark:text-amber-400'],
                 ];
@@ -180,11 +180,11 @@
     {{-- Profile Edit CTA --}}
     <div class="flex justify-end">
         <a href="{{ route('profile') }}" wire:navigate
-           class="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+           class="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
             </svg>
-            Edit Profil
+            {{ __('dashboard.edit_profile') }}
         </a>
     </div>
 

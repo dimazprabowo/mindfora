@@ -22,9 +22,9 @@
     <button x-ref="trigger" @click="toggleFilter()" type="button"
         class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors w-full md:w-auto">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
-        <span>Filter</span>
+        <span>{{ __('common.filter') }}</span>
         <template x-if='[{{ collect($filters)->map(fn ($f) => "\$wire.{$f}")->join(', ') }}].filter(v => v !== "" && v !== null).length > 0'>
-            <span class="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-blue-600 rounded-full"
+            <span class="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-primary-600 rounded-full"
                 x-text='[{{ collect($filters)->map(fn ($f) => "\$wire.{$f}")->join(', ') }}].filter(v => v !== "" && v !== null).length'>
             </span>
         </template>
@@ -45,7 +45,7 @@
 
         <div class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
             <button @click="filterOpen = false" type="button" class="text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                Tutup
+                {{ __('common.close') }}
             </button>
             <x-loading-button wire:click="resetFilters" target="resetFilters" type="button"
                 variant="secondary" size="xs"
@@ -54,7 +54,7 @@
                 <x-slot:icon>
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                 </x-slot:icon>
-                Reset Filter
+                {{ __('common.reset_filter') }}
             </x-loading-button>
         </div>
     </div>

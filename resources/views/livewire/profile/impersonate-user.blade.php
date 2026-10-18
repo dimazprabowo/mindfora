@@ -1,17 +1,17 @@
 <div>
     <div class="max-w-xl">
         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            Impersonate User
+            {{ __('common.impersonate_user') }}
         </h3>
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            Login sebagai user lain untuk membantu debugging atau konfigurasi. Aksi ini tercatat dalam sistem.
+            {{ __('profile.impersonate_description') }}
         </p>
     </div>
 
     <div class="mt-4 flex flex-col sm:flex-row gap-3">
         <div class="flex-1">
-            <input wire:model.live.debounce.300ms="search" type="text" placeholder="Cari nama atau email..."
-                class="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition text-sm">
+            <input wire:model.live.debounce.300ms="search" type="text" placeholder="{{ __('profile.impersonate_search_placeholder') }}"
+                class="w-full px-4 py-2.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500 transition text-sm">
         </div>
         <x-filter-popover :filters="['roleFilter']">
             <div>
@@ -19,21 +19,21 @@
                 <x-searchable-select
                     wire:model.live="roleFilter"
                     :options="collect($roles->map(fn($r) => ['value' => $r->name, 'label' => ucfirst($r->name)]))->toArray()"
-                    placeholder="Semua Role"
-                    searchPlaceholder="Cari role..."
+                    :placeholder="__('profile.all_roles')"
+                    :searchPlaceholder="__('profile.search_role_placeholder')"
                 />
             </div>
         </x-filter-popover>
     </div>
 
     <div class="mt-4 overflow-hidden bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto custom-scrollbar">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-800">
                     <tr>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Role</th>
-                        <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Aksi</th>
+                        <x-sortable-header field="name" :sortField="$sortField" :sortDir="$sortDir" :compact="true">User</x-sortable-header>
+                        <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Role</th>
+                        <th class="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('common.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -41,7 +41,7 @@
                         <tr wire:key="impersonate-user-{{ $user->id }}" class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                             <td class="px-4 py-2 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-xs font-semibold">
+                                    <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white text-xs font-semibold">
                                         {{ substr($user->name, 0, 1) }}
                                     </div>
                                     <div class="ml-3">
@@ -53,12 +53,12 @@
                             <td class="px-4 py-2 whitespace-nowrap">
                                 @if($user->roles->isNotEmpty())
                                     @foreach($user->roles as $role)
-                                        <span wire:key="imp-role-{{ $user->id }}-{{ $role->id }}" class="px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                        <span wire:key="imp-role-{{ $user->id }}-{{ $role->id }}" class="px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-200">
                                             {{ ucfirst($role->name) }}
                                         </span>
                                     @endforeach
                                 @else
-                                    <span class="text-xs text-gray-400">No Role</span>
+                                    <span class="text-xs text-gray-400">{{ __('profile.no_role') }}</span>
                                 @endif
                             </td>
                             <td class="px-4 py-2 whitespace-nowrap text-right">
@@ -76,14 +76,14 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                         </svg>
                                     </x-slot:icon>
-                                    Login
+                                    {{ __('auth.login_button') }}
                                 </x-loading-button>
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="3" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
-                                Tidak ada user ditemukan
+                                {{ __('profile.no_users_found') }}
                             </td>
                         </tr>
                     @endforelse

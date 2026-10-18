@@ -11,7 +11,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded">Impersonating</span>
+                    <span class="text-xs font-semibold uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded">{{ __('common.impersonating') }}</span>
                 </div>
                 <div class="flex items-center space-x-2 min-w-0 text-sm">
                     @if($originalUser)
@@ -40,7 +40,7 @@
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Kembali ke Akun Saya
+                {{ __('common.back_to_my_account') }}
             </button>
         </div>
     </div>
@@ -56,7 +56,7 @@
                         x-on:resize.window="$el.style.display = (Alpine.store('layout').isSidebar() || window.innerWidth < 1024) ? '' : 'none'"
                         @click="window.innerWidth >= 1024 ? Alpine.store('sidebar').toggleCollapse() : Alpine.store('sidebar').toggle()"
                         class="inline-flex items-center justify-center p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                        :title="window.innerWidth >= 1024 ? (Alpine.store('sidebar').collapsed ? 'Expand sidebar' : 'Collapse sidebar') : 'Toggle menu'">
+                        :title="window.innerWidth >= 1024 ? (Alpine.store('sidebar').collapsed ? '{{ __('common.expand_sidebar') }}' : '{{ __('common.collapse_sidebar') }}') : '{{ __('common.toggle_menu') }}'">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
@@ -64,12 +64,13 @@
 
                 {{-- Navbar mode: Logo + App Name --}}
                 <a href="{{ route('dashboard') }}" class="hidden lg:flex items-center space-x-2" x-show="Alpine.store('layout').isNavbar()" x-cloak>
-                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                    <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21c-4.97 0-9-3.582-9-8 0-3.866 3-7 6.5-7.5C10 3 11 2 12 2s2 1 2.5 3.5C18 6 21 9.134 21 13c0 4.418-4.03 8-9 8z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21V8M9 11l3-3 3 3M9 14l3-3 3 3M9 17l3-3 3 3"/>
                         </svg>
                     </div>
-                    <span class="text-sm font-bold text-gray-900 dark:text-white hidden sm:inline">{{ config('app.name', 'Boilerplate') }}</span>
+                    <span class="text-sm font-bold text-gray-900 dark:text-white hidden sm:inline">{{ app_name() }}</span>
                 </a>
             </div>
 
@@ -115,7 +116,7 @@
                             x-transition:leave="transition ease-in duration-200"
                             x-transition:leave-start="opacity-100 translate-x-0"
                             x-transition:leave-end="opacity-0 -translate-x-4"
-                            class="absolute left-0 ml-1 top-1/2 -translate-y-1/2 z-30 p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-full shadow-xl text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:scale-110 active:scale-95 transition-all focus:outline-none ring-2 ring-transparent focus:ring-blue-500/50">
+                            class="absolute left-0 ml-1 top-1/2 -translate-y-1/2 z-30 p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-full shadow-xl text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:scale-110 active:scale-95 transition-all focus:outline-none ring-2 ring-transparent focus:ring-primary-500/50">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
                         </svg>
@@ -124,26 +125,6 @@
                     {{-- Menu Container with Scroll --}}
                     <div class="relative flex items-center flex-1 overflow-hidden" 
                          @menu-updated.window="$nextTick(() => checkScroll())">
-                        {{-- Gradient Shadows --}}
-                        <div x-show="showLeftArrow" 
-                             x-transition:enter="transition opacity duration-300"
-                             x-transition:enter-start="opacity-0"
-                             x-transition:enter-end="opacity-100"
-                             x-transition:leave="transition opacity duration-300"
-                             x-transition:leave-start="opacity-100"
-                             x-transition:leave-end="opacity-0"
-                             class="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none bg-gradient-to-r from-white dark:from-gray-800 to-transparent"
-                             x-cloak></div>
-                        <div x-show="showRightArrow" 
-                             x-transition:enter="transition opacity duration-300"
-                             x-transition:enter-start="opacity-0"
-                             x-transition:enter-end="opacity-100"
-                             x-transition:leave="transition opacity duration-300"
-                             x-transition:leave-start="opacity-100"
-                             x-transition:leave-end="opacity-0"
-                             class="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none bg-gradient-to-l from-white dark:from-gray-800 to-transparent"
-                             x-cloak></div>
-
                         <div x-ref="menuContainer"
                              @scroll="checkScroll()"
                              class="flex items-center overflow-x-auto navbar-scroll px-4"
@@ -168,7 +149,7 @@
                                                 x-ref="button"
                                                 type="button"
                                                 class="flex items-center space-x-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap
-                                                       {{ ($item['active'] ?? false) ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                                       {{ ($item['active'] ?? false) ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                             <x-icon name="{{ $item['icon'] }}" class="w-4 h-4 flex-shrink-0" />
                                             <span>{{ $item['name'] }}</span>
                                             <svg class="w-3.5 h-3.5 transition-transform flex-shrink-0" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -193,7 +174,7 @@
                                                     <a href="{{ route($child['route']) }}"
                                                        wire:navigate
                                                        class="block px-4 py-2 text-sm transition-colors
-                                                              {{ ($child['active'] ?? false) ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                                              {{ ($child['active'] ?? false) ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-medium' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                                         {{ $child['name'] }}
                                                     </a>
                                                 @endforeach
@@ -204,7 +185,7 @@
                                     <a href="{{ route($item['route']) }}"
                                        wire:navigate
                                        class="flex items-center space-x-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors flex-shrink-0 whitespace-nowrap
-                                              {{ ($item['active'] ?? false) ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                              {{ ($item['active'] ?? false) ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                         <x-icon name="{{ $item['icon'] }}" class="w-4 h-4 flex-shrink-0" />
                                         <span>{{ $item['name'] }}</span>
                                     </a>
@@ -224,7 +205,7 @@
                                 x-transition:leave="transition ease-in duration-200"
                                 x-transition:leave-start="opacity-100 translate-x-0"
                                 x-transition:leave-end="opacity-0 translate-x-4"
-                                class="absolute right-0 mr-1 top-1/2 -translate-y-1/2 z-30 p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-full shadow-xl text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:scale-110 active:scale-95 transition-all focus:outline-none ring-2 ring-transparent focus:ring-blue-500/50">
+                                class="absolute right-0 mr-1 top-1/2 -translate-y-1/2 z-30 p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-full shadow-xl text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:scale-110 active:scale-95 transition-all focus:outline-none ring-2 ring-transparent focus:ring-primary-500/50">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
                             </svg>
@@ -236,7 +217,7 @@
             {{-- Center: Page Title (mobile only) --}}
             <div class="flex-1 lg:hidden">
                 <h1 class="text-lg font-semibold text-gray-900 dark:text-white text-center">
-                    {{ $title ?? 'Dashboard' }}
+                    {{ $title ?? __('menu.dashboard') }}
                 </h1>
             </div>
 
@@ -245,7 +226,7 @@
                 {{-- Layout Mode Toggle --}}
                 <button @click="Alpine.store('layout').toggleMode()"
                         class="hidden lg:inline-flex p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                        :title="Alpine.store('layout').isSidebar() ? 'Switch to navbar layout' : 'Switch to sidebar layout'">
+                        :title="Alpine.store('layout').isSidebar() ? '{{ __('common.switch_to_navbar') }}' : '{{ __('common.switch_to_sidebar') }}'">
                     {{-- Show "switch to navbar" icon when in sidebar mode --}}
                     <svg x-show="Alpine.store('layout').isSidebar()" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -259,6 +240,9 @@
                         <line x1="3" y1="9" x2="9" y2="9" opacity="0.4"/>
                     </svg>
                 </button>
+
+                {{-- Language Switcher --}}
+                <x-language-switcher />
 
                 {{-- Dark Mode Toggle --}}
                 <button @click="$store.darkMode.toggle()"
@@ -280,7 +264,7 @@
                 <div x-data="{ open: false }" @click.outside="open = false" class="relative">
                     <button @click="open = !open"
                             class="flex items-center space-x-2 sm:space-x-3 p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold text-sm">
+                        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-semibold text-sm">
                             {{ substr($authUser->name, 0, 1) }}
                         </div>
                         <div class="hidden sm:block text-left">
@@ -317,7 +301,7 @@
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                 </svg>
-                                Profil Saya
+                                {{ __('common.my_profile') }}
                             </a>
 
                             @can('users_impersonate')
@@ -328,7 +312,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                 </svg>
-                                Impersonate User
+                                {{ __('common.impersonate_user') }}
                             </a>
                             @endcan
 
@@ -340,7 +324,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 </svg>
-                                Pengaturan
+                                {{ __('menu.settings') }}
                             </a>
                             @endcan
                         </div>
@@ -358,13 +342,13 @@
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                Kembali ke Akun Saya
+                                {{ __('common.back_to_my_account') }}
                             </button>
                         </div>
                         @endif
 
                         <div class="py-1">
-                            <button @click="window.dispatchEvent(new CustomEvent('confirm-logout-nav', { detail: { action: 'logout', title: 'Konfirmasi Keluar', message: 'Apakah Anda yakin ingin keluar dari aplikasi?', confirmText: 'Ya, Keluar', type: 'danger' } }))"
+                            <button @click="window.dispatchEvent(new CustomEvent('confirm-logout-nav', { detail: { action: 'logout', title: '{{ __('common.confirm_logout_title') }}', message: '{{ __('common.confirm_logout_message') }}', confirmText: '{{ __('common.yes_logout') }}', type: 'danger' } }))"
                                     class="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                                 <svg wire:loading.class="hidden" wire:target="logout" class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
@@ -373,8 +357,8 @@
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                <span wire:loading.class="hidden" wire:target="logout">Keluar</span>
-                                <span wire:loading wire:target="logout">Memproses...</span>
+                                <span wire:loading.class="hidden" wire:target="logout">{{ __('common.logout') }}</span>
+                                <span wire:loading wire:target="logout">{{ __('common.processing') }}</span>
                             </button>
                         </div>
                     </div>
@@ -387,9 +371,9 @@
 
     {{-- Confirm Logout Modal --}}
     <x-confirm-modal eventName="confirm-logout-nav"
-        title="Konfirmasi Keluar"
-        message="Apakah Anda yakin ingin keluar dari aplikasi?"
-        confirmText="Ya, Keluar"
-        cancelText="Batal"
+        title="{{ __('common.confirm_logout_title') }}"
+        message="{{ __('common.confirm_logout_message') }}"
+        confirmText="{{ __('common.yes_logout') }}"
+        cancelText="{{ __('common.cancel') }}"
         type="danger" />
 </div>

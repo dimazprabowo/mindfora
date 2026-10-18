@@ -5,9 +5,9 @@ namespace App\Livewire\MasterData;
 use App\Enums\CompanyStatus;
 use App\Exports\CompaniesExport;
 use App\Livewire\Traits\HasNotification;
+use App\Livewire\Traits\HasTableSorting;
 use App\Models\Company;
 use App\Services\CompanyService;
-use App\Traits\HasDynamicLike;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
@@ -15,41 +15,58 @@ use Livewire\WithPagination;
 
 class CompanyManagement extends Component
 {
-    use WithPagination, AuthorizesRequests, HasNotification, HasDynamicLike;
+    use AuthorizesRequests, HasNotification, HasTableSorting, WithPagination;
 
     public $search = '';
+
     public $statusFilter = '';
+
     public bool $filterChanged = false;
+
     public $showModal = false;
+
     public $editMode = false;
 
     // Form fields
     public $companyId;
+
     public $code;
+
     public $name;
+
     public $email;
+
     public $phone;
+
     public $address;
+
     public $pic_name;
+
     public $pic_email;
+
     public $pic_phone;
+
     public $npwp;
+
     public $status = 'active';
-    
+
     // Delete Modal
     public $showDeleteModal = false;
+
     public $deletingCompanyId;
+
     public $deletingCompanyName;
 
     public function mount()
     {
         $this->authorize('viewAny', Company::class);
+        $this->sortField = 'name';
     }
 
     public function rules()
     {
         return [
-            'code' => ['required', 'string', 'max:50', $this->editMode ? 'unique:companies,code,' . $this->companyId : 'unique:companies,code'],
+            'code' => ['required', 'string', 'max:50', $this->editMode ? 'unique:companies,code,'.$this->companyId : 'unique:companies,code'],
             'name' => 'required|string|max:255',
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:20',
@@ -61,9 +78,9 @@ class CompanyManagement extends Component
                 'required',
                 'string',
                 'regex:/^[0-9]{15,16}$/',
-                $this->editMode ? 'unique:companies,npwp,' . $this->companyId : 'unique:companies,npwp'
+                $this->editMode ? 'unique:companies,npwp,'.$this->companyId : 'unique:companies,npwp',
             ],
-            'status' => ['required', 'string', 'in:' . implode(',', CompanyStatus::values())],
+            'status' => ['required', 'string', 'in:'.implode(',', CompanyStatus::values())],
         ];
     }
 
@@ -203,6 +220,7 @@ class CompanyManagement extends Component
             if ($company->users()->exists()) {
                 $this->notifyError('Perusahaan tidak dapat dihapus karena masih memiliki user terkait.');
                 $this->showDeleteModal = false;
+
                 return;
             }
 
@@ -264,41 +282,38 @@ class CompanyManagement extends Component
         $this->authorize('exportExcel', Company::class);
 
         return (new CompaniesExport($this->search, $this->statusFilter))
-            ->download('perusahaan-' . now()->format('Y-m-d-His') . '.xlsx');
+            ->download('perusahaan-'.now()->format('Y-m-d-His').'.xlsx');
     }
 
     public function exportPdf(CompanyService $service)
     {
         $this->authorize('exportPdf', Company::class);
 
-        $operator = $this->getLikeOperator();
-        $companies = Company::withCount('users')
-            ->when($this->search, function ($q) use ($operator) {
-                $q->where(function ($q) use ($operator) {
-                    $q->where('code', $operator, "%{$this->search}%")
-                      ->orWhere('name', $operator, "%{$this->search}%")
-                      ->orWhere('email', $operator, "%{$this->search}%")
-                      ->orWhere('pic_name', $operator, "%{$this->search}%");
-                });
-            })
-            ->when($this->statusFilter !== null && $this->statusFilter !== '', function ($q) {
-                $q->where('status', $this->statusFilter);
-            })
-            ->orderBy('name')
-            ->get();
+        $companies = $service->getFiltered(
+            $this->search,
+            $this->statusFilter,
+            perPage: 10000,
+            sortField: $this->sortField,
+            sortDir: $this->sortDir
+        );
 
         $pdf = Pdf::loadView('exports.companies-pdf', ['companies' => $companies]);
         $pdf->setPaper('a4', 'landscape');
 
         return response()->streamDownload(
-            fn () => print($pdf->output()),
-            'perusahaan-' . now()->format('Y-m-d-His') . '.pdf'
+            fn () => print ($pdf->output()),
+            'perusahaan-'.now()->format('Y-m-d-His').'.pdf'
         );
     }
 
     public function render(CompanyService $service)
     {
-        $companies = $service->getFiltered($this->search, $this->statusFilter);
+        $companies = $service->getFiltered(
+            $this->search,
+            $this->statusFilter,
+            sortField: $this->sortField,
+            sortDir: $this->sortDir
+        );
 
         if ($this->filterChanged) {
             $this->notifySuccess("Ditemukan {$companies->total()} data perusahaan.");

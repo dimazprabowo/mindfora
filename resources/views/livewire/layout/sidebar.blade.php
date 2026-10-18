@@ -24,15 +24,15 @@
             <div class="flex items-center h-16 px-4"
                  :class="Alpine.store('sidebar').collapsed ? 'lg:justify-center lg:px-2' : 'justify-between'">
                 <a href="{{ route('dashboard') }}" class="flex items-center space-x-2" :class="Alpine.store('sidebar').collapsed && 'lg:justify-center lg:space-x-0'">
-                    <div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                    <div class="w-9 h-9 bg-primary-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21c-4.97 0-9-3.582-9-8 0-3.866 3-7 6.5-7.5C10 3 11 2 12 2s2 1 2.5 3.5C18 6 21 9.134 21 13c0 4.418-4.03 8-9 8z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21V8M9 11l3-3 3 3M9 14l3-3 3 3M9 17l3-3 3 3"/>
                         </svg>
                     </div>
                     {{-- App name: always visible on mobile, hidden on desktop when collapsed --}}
                     <div class="leading-tight" :class="Alpine.store('sidebar').collapsed && 'lg:hidden'">
-                        <div class="text-sm font-bold text-gray-900 dark:text-white">{{ config('app.name', 'Boilerplate') }}</div>
-                        <div class="text-xs text-gray-500 dark:text-gray-400">PT. Biro Klasifikasi Indonesia</div>
+                        <div class="text-sm font-bold text-gray-900 dark:text-white">{{ app_name() }}</div>
                     </div>
                 </a>
                 {{-- Close button: mobile only --}}
@@ -45,7 +45,7 @@
         </div>
 
         {{-- Navigation --}}
-        <nav class="flex-1 py-4 space-y-1 overflow-y-auto overflow-x-hidden sidebar-scroll"
+        <nav class="flex-1 py-4 space-y-1 overflow-y-auto overflow-x-hidden custom-scrollbar"
              :class="Alpine.store('sidebar').collapsed ? 'lg:px-2 px-3' : 'px-3'">
             @foreach($menuItems as $item)
                 @if(isset($item['children']))
@@ -54,7 +54,7 @@
                         {{-- Expanded button: visible on mobile always, on desktop when not collapsed --}}
                         <button @click="open = !open"
                                 class="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-lg transition-colors
-                                       {{ ($item['active'] ?? false) ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"
+                                       {{ ($item['active'] ?? false) ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"
                                 :class="Alpine.store('sidebar').collapsed && 'lg:hidden'">
                             <div class="flex items-center space-x-3">
                                 <x-icon name="{{ $item['icon'] }}" class="w-5 h-5 flex-shrink-0" />
@@ -72,7 +72,7 @@
                              @mouseleave="flyout = false"
                              x-on:livewire:navigating.window="flyout = false">
                             <button class="w-full flex items-center justify-center p-2.5 rounded-lg transition-colors
-                                           {{ ($item['active'] ?? false) ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                           {{ ($item['active'] ?? false) ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <x-icon name="{{ $item['icon'] }}" class="w-5 h-5" />
                             </button>
                             {{-- Flyout teleported to body --}}
@@ -94,7 +94,7 @@
                                         <a href="{{ route($child['route']) }}"
                                            wire:navigate
                                            class="block px-3 py-2 text-sm transition-colors
-                                                  {{ ($child['active'] ?? false) ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white' }}">
+                                                  {{ ($child['active'] ?? false) ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white' }}">
                                             {{ $child['name'] }}
                                         </a>
                                     @endforeach
@@ -116,7 +116,7 @@
                                    wire:navigate
                                    @click="if(window.innerWidth < 1024) Alpine.store('sidebar').close()"
                                    class="block px-3 py-2 text-sm rounded-lg transition-colors
-                                          {{ ($child['active'] ?? false) ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white' }}">
+                                          {{ ($child['active'] ?? false) ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white' }}">
                                     {{ $child['name'] }}
                                 </a>
                             @endforeach
@@ -134,14 +134,14 @@
                            wire:navigate
                            @click="if(window.innerWidth < 1024) Alpine.store('sidebar').close()"
                            class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors
-                                  {{ ($item['active'] ?? false) ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"
+                                  {{ ($item['active'] ?? false) ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"
                            :class="Alpine.store('sidebar').collapsed ? 'lg:justify-center lg:p-2.5' : 'justify-between'">
                             <div class="flex items-center space-x-3" :class="Alpine.store('sidebar').collapsed && 'lg:space-x-0'">
                                 <x-icon name="{{ $item['icon'] }}" class="w-5 h-5 flex-shrink-0" />
                                 <span :class="Alpine.store('sidebar').collapsed && 'lg:hidden'">{{ $item['name'] }}</span>
                             </div>
                             @if(isset($item['badge']) && $item['badge'] > 0)
-                                <span :class="Alpine.store('sidebar').collapsed && 'lg:hidden'" class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400">
+                                <span :class="Alpine.store('sidebar').collapsed && 'lg:hidden'" class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-200">
                                     {{ $item['badge'] }}
                                 </span>
                             @endif
@@ -173,7 +173,7 @@
             <div :class="Alpine.store('sidebar').collapsed && 'lg:hidden'">
                 <div class="flex items-center space-x-3">
                     <div class="flex-shrink-0">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold shadow-md">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-semibold shadow-md">
                             {{ substr($authUser->name, 0, 1) }}
                         </div>
                     </div>
@@ -198,11 +198,11 @@
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
                         </span>
-                        <span x-show="!loading">Profil</span>
-                        <span x-show="loading" x-cloak>Memuat...</span>
+                        <span x-show="!loading">{{ __('common.profile') }}</span>
+                        <span x-show="loading" x-cloak>{{ __('common.loading') }}</span>
                     </a>
                     <button x-data="{ loading: false }"
-                            @click="loading = true; setTimeout(() => loading = false, 500); window.dispatchEvent(new CustomEvent('confirm-logout-sidebar', { detail: { action: 'logout', title: 'Konfirmasi Keluar', message: 'Apakah Anda yakin ingin keluar dari aplikasi?', confirmText: 'Ya, Keluar', type: 'danger' } }))"
+                            @click="loading = true; setTimeout(() => loading = false, 500); window.dispatchEvent(new CustomEvent('confirm-logout-sidebar', { detail: { action: 'logout', title: '{{ __('common.confirm_logout_title') }}', message: '{{ __('common.confirm_logout_message') }}', confirmText: '{{ __('common.yes_logout') }}', type: 'danger' } }))"
                             class="flex items-center justify-center px-3 py-2 text-xs font-medium text-red-600 dark:text-red-400 bg-white dark:bg-gray-800 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors w-full">
                         <span class="relative inline-flex w-4 h-4 mr-1.5">
                             <svg x-show="!loading" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -213,8 +213,8 @@
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
                         </span>
-                        <span x-show="!loading">Keluar</span>
-                        <span x-show="loading" x-cloak>Memuat...</span>
+                        <span x-show="!loading">{{ __('common.logout') }}</span>
+                        <span x-show="loading" x-cloak>{{ __('common.loading') }}</span>
                     </button>
                 </div>
             </div>
@@ -226,7 +226,7 @@
                 <div class="relative"
                      @mouseenter="let r = $el.getBoundingClientRect(); pos = { left: r.right + 8, bottom: window.innerHeight - r.bottom }; flyout = true"
                      @mouseleave="flyout = false">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold shadow-md cursor-pointer">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-semibold shadow-md cursor-pointer">
                         {{ substr($authUser->name, 0, 1) }}
                     </div>
                     {{-- Flyout teleported to body --}}
@@ -259,11 +259,11 @@
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
                                 </span>
-                                <span x-show="!loading">Profil</span>
-                                <span x-show="loading" x-cloak>Memuat...</span>
+                                <span x-show="!loading">{{ __('common.profile') }}</span>
+                                <span x-show="loading" x-cloak>{{ __('common.loading') }}</span>
                             </a>
                             <button x-data="{ loading: false }"
-                                    @click="loading = true; setTimeout(() => loading = false, 500); window.dispatchEvent(new CustomEvent('confirm-logout-sidebar', { detail: { action: 'logout', title: 'Konfirmasi Keluar', message: 'Apakah Anda yakin ingin keluar dari aplikasi?', confirmText: 'Ya, Keluar', type: 'danger' } }))"
+                                    @click="loading = true; setTimeout(() => loading = false, 500); window.dispatchEvent(new CustomEvent('confirm-logout-sidebar', { detail: { action: 'logout', title: '{{ __('common.confirm_logout_title') }}', message: '{{ __('common.confirm_logout_message') }}', confirmText: '{{ __('common.yes_logout') }}', type: 'danger' } }))"
                                     @mouseenter="flyout = true"
                                     class="flex items-center w-full px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                                 <span class="relative inline-flex w-4 h-4 mr-2">
@@ -273,8 +273,8 @@
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
                                 </span>
-                                <span x-show="!loading">Keluar</span>
-                                <span x-show="loading" x-cloak>Memuat...</span>
+                                <span x-show="!loading">{{ __('common.logout') }}</span>
+                                <span x-show="loading" x-cloak>{{ __('common.loading') }}</span>
                             </button>
                         </div>
                     </template>
@@ -286,7 +286,7 @@
         <div class="hidden lg:flex items-center justify-center border-t border-gray-200 dark:border-gray-700 py-2">
             <button @click="Alpine.store('sidebar').toggleCollapse()"
                     class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                    :title="Alpine.store('sidebar').collapsed ? 'Expand sidebar' : 'Collapse sidebar'">
+                    :title="Alpine.store('sidebar').collapsed ? '{{ __('common.expand_sidebar') }}' : '{{ __('common.collapse_sidebar') }}'">
                 <svg class="w-5 h-5 transition-transform duration-300" :class="Alpine.store('sidebar').collapsed ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
                 </svg>
@@ -296,9 +296,9 @@
 
     {{-- Confirm Logout Modal --}}
     <x-confirm-modal eventName="confirm-logout-sidebar"
-        title="Konfirmasi Keluar"
-        message="Apakah Anda yakin ingin keluar dari aplikasi?"
-        confirmText="Ya, Keluar"
-        cancelText="Batal"
+        title="{{ __('common.confirm_logout_title') }}"
+        message="{{ __('common.confirm_logout_message') }}"
+        confirmText="{{ __('common.yes_logout') }}"
+        cancelText="{{ __('common.cancel') }}"
         type="danger" />
 </div>

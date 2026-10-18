@@ -1,7 +1,7 @@
 <x-auth-shell>
     <div class="mb-8">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Selamat Datang</h2>
-        <p class="text-gray-600 dark:text-gray-400 mt-2 text-sm sm:text-base">Silakan login untuk melanjutkan</p>
+        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{{ __('auth.welcome_title') }}</h2>
+        <p class="text-gray-600 dark:text-gray-400 mt-2 text-sm sm:text-base">{{ __('auth.welcome_subtitle') }}</p>
     </div>
 
     <!-- Session Status -->
@@ -11,7 +11,7 @@
         <!-- Email Address -->
         <div>
             <x-input-label for="email" value="Email" :required="true" />
-            <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="username" placeholder="nama@email.com" />
+            <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="username" placeholder="{{ __('auth.email_placeholder') }}" />
             <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
         </div>
 
@@ -27,7 +27,7 @@
                     name="password"
                     required
                     autocomplete="current-password"
-                    placeholder="••••••••"
+                    placeholder="{{ __('auth.password_placeholder') }}"
                 />
                 <button
                     type="button"
@@ -52,13 +52,13 @@
         <!-- Remember Me -->
         <div class="flex items-center justify-between">
             <label for="remember" class="inline-flex items-center">
-                <input wire:model="form.remember" id="remember" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-blue-600 shadow-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">Ingat saya</span>
+                <input wire:model="form.remember" id="remember" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-primary-600 shadow-sm focus:ring-primary-500 dark:focus:ring-primary-600 dark:focus:ring-offset-gray-800" name="remember">
+                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('auth.remember_me') }}</span>
             </label>
 
             @if (Route::has('password.request'))
-                <a class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300" href="{{ route('password.request') }}" wire:navigate>
-                    Lupa password?
+                <a class="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300" href="{{ route('password.request') }}" wire:navigate>
+                    {{ __('auth.forgot_password_link') }}
                 </a>
             @endif
         </div>
@@ -75,11 +75,11 @@
 
             <!-- Reload Button -->
             <div class="flex items-center justify-center gap-4 mt-3">
-                <button type="button" onclick="window.reloadRecaptcha()" class="inline-flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors">
+                <button type="button" onclick="window.reloadRecaptcha()" class="inline-flex items-center gap-2 text-sm text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 font-medium transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                     </svg>
-                    <span>Reload reCAPTCHA</span>
+                    <span>{{ __('auth.reload_recaptcha') }}</span>
                 </button>
             </div>
 
@@ -90,7 +90,7 @@
         @endif
 
         <button type="submit"
-            class="w-full inline-flex items-center justify-center px-4 py-3 bg-blue-600 border border-transparent rounded-lg font-semibold text-base text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full inline-flex items-center justify-center px-4 py-3 bg-primary-600 border border-transparent rounded-lg font-semibold text-base text-white uppercase tracking-widest hover:bg-primary-700 focus:bg-primary-700 active:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
             wire:loading.attr="disabled"
             wire:target="login">
 
@@ -106,12 +106,12 @@
 
                 <!-- TEKS NORMAL -->
                 <span wire:loading.class="hidden" wire:target="login">
-                    Masuk
+                    {{ __('auth.login_button') }}
                 </span>
 
                 <!-- TEKS LOADING -->
                 <span wire:loading wire:target="login">
-                    Memproses...
+                    {{ __('common.processing') }}
                 </span>
 
             </span>
@@ -120,9 +120,9 @@
         @if($this->isRecaptchaEnabled())
         <!-- reCAPTCHA Badge Info -->
         <div class="text-xs text-gray-500 dark:text-gray-400 text-center mt-4">
-            This site is protected by reCAPTCHA and the Google
-            <a href="https://policies.google.com/privacy" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">Privacy Policy</a> and
-            <a href="https://policies.google.com/terms" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">Terms of Service</a> apply.
+            {{ __('auth.recaptcha_notice_prefix') }}
+            <a href="https://policies.google.com/privacy" target="_blank" class="text-primary-600 dark:text-primary-400 hover:underline">{{ __('auth.privacy_policy') }}</a> {{ __('auth.and') }}
+            <a href="https://policies.google.com/terms" target="_blank" class="text-primary-600 dark:text-primary-400 hover:underline">{{ __('auth.terms_of_service') }}</a> {{ __('auth.apply') }}
         </div>
         @endif
     </form>
@@ -134,7 +134,7 @@
                 <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
             </div>
             <div class="relative flex justify-center text-sm">
-                <span class="px-3 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">atau</span>
+                <span class="px-3 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">{{ __('auth.or') }}</span>
             </div>
         </div>
 
@@ -143,7 +143,7 @@
            x-data="{ loading: false }"
            @click="loading = true"
            :class="loading ? 'opacity-70 pointer-events-none' : ''"
-           class="w-full inline-flex items-center justify-center gap-3 px-4 py-3 bg-white dark:bg-gray-700 border-2 border-blue-200 dark:border-blue-700 rounded-lg font-semibold text-sm text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:border-blue-400 dark:hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+           class="w-full inline-flex items-center justify-center gap-3 px-4 py-3 bg-white dark:bg-gray-700 border-2 border-primary-200 dark:border-primary-700 rounded-lg font-semibold text-sm text-primary-700 dark:text-primary-300 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:border-primary-400 dark:hover:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
             <svg x-show="!loading" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
             </svg>
@@ -172,7 +172,7 @@
     @if($registrationOpen)
         <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
             <div class="text-center mb-4">
-                <p class="text-sm text-gray-600 dark:text-gray-400">Belum punya akun?</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('auth.no_account') }}</p>
 
                 @if($showCountdown && $daysRemaining !== null)
                     <div class="mt-2 inline-flex items-center gap-2 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-full">
@@ -181,11 +181,11 @@
                         </svg>
                         <span class="text-xs font-medium text-amber-700 dark:text-amber-300">
                             @if($daysRemaining == 0)
-                                Pendaftaran ditutup hari ini!
+                                {{ __('auth.registration_closes_today') }}
                             @elseif($daysRemaining == 1)
-                                Sisa 1 hari lagi
+                                {{ __('auth.days_remaining_one') }}
                             @else
-                                Sisa {{ $daysRemaining }} hari lagi
+                                {{ __('auth.days_remaining', ['days' => $daysRemaining]) }}
                             @endif
                         </span>
                     </div>
@@ -210,7 +210,7 @@
 
             @if($deadline)
                 <p class="text-xs text-gray-500 dark:text-gray-400 text-center mt-3">
-                    Pendaftaran dibuka hingga {{ \App\Helpers\ConfigHelper::getFormattedRegistrationDeadline('d F Y') }}
+                    {{ __('auth.registration_open_until', ['date' => \App\Helpers\ConfigHelper::getFormattedRegistrationDeadline('d F Y')]) }}
                 </p>
             @endif
         </div>
@@ -224,7 +224,7 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Pendaftaran Ditutup</p>
+                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('auth.registration_closed') }}</p>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                             {{ \App\Helpers\ConfigHelper::getRegistrationClosedMessage() }}
                         </p>

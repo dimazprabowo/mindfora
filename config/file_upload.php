@@ -37,5 +37,17 @@ return [
             'max_size' => 20480, // 20 MB
             'mimes' => ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'csv', 'zip', 'rar', 'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'],
         ],
+
+        // Materi pelatihan (audio terapi & video mindfulness)
+        'training-materials' => [
+            'max_size' => 51200, // 50 MB
+            'mimes' => ['mp3', 'wav', 'ogg', 'm4a', 'mp4', 'webm', 'mov', 'avi', 'mkv'],
+        ],
+
+        // Thumbnail materi pelatihan (cover image)
+        'training-thumbnail' => [
+            'max_size' => 5120, // 5 MB
+            'mimes' => ['jpg', 'jpeg', 'png', 'webp'],
+        ],
     ],
 ];

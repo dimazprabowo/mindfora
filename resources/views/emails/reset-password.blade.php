@@ -56,7 +56,7 @@
         .logo {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+            background-color: rgba(255, 255, 255, 0.15);
             border-radius: 20px;
             display: inline-flex;
             align-items: center;
@@ -66,12 +66,11 @@
             position: relative;
             z-index: 1;
         }
-        
-        .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 12px;
+
+        .logo svg {
+            width: 44px;
+            height: 44px;
+            color: #ffffff;
         }
         
         .header h1 {
@@ -263,10 +262,13 @@
         <!-- Header -->
         <div class="header">
             <div class="logo">
-                <img src="{{ email_logo_url() }}" alt="BKI Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21c-4.97 0-9-3.582-9-8 0-3.866 3-7 6.5-7.5C10 3 11 2 12 2s2 1 2.5 3.5C18 6 21 9.134 21 13c0 4.418-4.03 8-9 8z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21V8M9 11l3-3 3 3M9 14l3-3 3 3M9 17l3-3 3 3"/>
+                </svg>
             </div>
             <h1>Reset Password</h1>
-            <p>{{ config('app.name', 'Boilerplate') }}</p>
+            <p>{{ app_name() }}</p>
         </div>
         
         <!-- Content -->
@@ -276,7 +278,7 @@
             </div>
             
             <div class="message">
-                Kami menerima permintaan untuk mereset password akun Anda di <strong>{{ config('app.name', 'Boilerplate') }}</strong>. 
+                Kami menerima permintaan untuk mereset password akun Anda di <strong>{{ app_name() }}</strong>. 
                 Jika Anda yang melakukan permintaan ini, silakan klik tombol di bawah untuk membuat password baru.
             </div>
             
@@ -304,7 +306,7 @@
         
         <!-- Footer -->
         <div class="footer">
-            <p><strong>{{ config('app.name', 'Boilerplate') }}</strong></p>
+            <p><strong>{{ app_name() }}</strong></p>
             <p style="margin-top: 15px; font-size: 12px;">
                 Email ini dikirim secara otomatis, mohon tidak membalas email ini.
             </p>
@@ -314,7 +316,7 @@
                 <a href="#">Hubungi Kami</a>
             </div>
             <p style="margin-top: 20px; font-size: 12px; color: #9ca3af;">
-                © {{ date('Y') }} {{ config('app.name', 'Boilerplate') }}. All rights reserved.
+                © {{ date('Y') }} {{ app_name() }}. All rights reserved.
             </p>
         </div>
     </div>

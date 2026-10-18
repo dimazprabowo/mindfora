@@ -1,15 +1,15 @@
 @props([
     'options' => [],
     'selected' => [],
-    'placeholder' => 'Pilih opsi...',
-    'searchPlaceholder' => 'Cari...',
+    'placeholder' => __('common.select_option'),
+    'searchPlaceholder' => __('common.search_placeholder'),
     'name' => '',
     'id' => null,
     'disabled' => false,
     'required' => false,
     'error' => false,
-    'emptyText' => 'Tidak ada data',
-    'noResultText' => 'Tidak ditemukan',
+    'emptyText' => __('common.no_data'),
+    'noResultText' => __('common.not_found'),
 ])
 
 @php
@@ -117,7 +117,7 @@
         x-on:click="toggleDropdown()"
         @if($disabled) disabled @endif
         {{ $attributes->except(['wire:model', 'wire:model.live', 'wire:model.change'])->merge([
-            'class' => 'relative w-full cursor-pointer rounded-xl border bg-white dark:bg-gray-900 py-2.5 pl-4 pr-10 text-left shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 ' . 
+            'class' => 'relative w-full cursor-pointer rounded-xl border bg-white dark:bg-gray-900 py-2.5 pl-4 pr-10 text-left shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500 ' . 
                 ($error ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600') .
                 ($disabled ? ' opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' : ' hover:border-gray-400 dark:hover:border-gray-500')
         ]) }}
@@ -131,7 +131,7 @@
             
             {{-- Selected Count Badge --}}
             <template x-if="selectedOptions.length > 0">
-                <span class="inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
+                <span class="inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-semibold bg-primary-100 dark:bg-primary-900/50 text-primary-800 dark:text-primary-200">
                     <span x-text="selectedOptions.length"></span>
                 </span>
             </template>
@@ -179,7 +179,7 @@
                     x-ref="searchInput"
                     x-on:click.stop
                     placeholder="{{ $searchPlaceholder }}"
-                    class="block w-full rounded-lg border-0 py-2 pl-9 pr-3 text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                    class="block w-full rounded-lg border-0 py-2 pl-9 pr-3 text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-500"
                 >
                 {{-- Clear Search Button --}}
                 <button
@@ -200,9 +200,9 @@
             <button
                 type="button"
                 x-on:click.stop="selectAll()"
-                class="text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition"
+                class="text-xs font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition"
             >
-                Pilih Semua
+                {{ __('common.select_all') }}
             </button>
             <button
                 type="button"
@@ -210,13 +210,13 @@
                 x-show="selectedOptions.length > 0"
                 class="text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition"
             >
-                Hapus Semua
+                {{ __('common.clear_all') }}
             </button>
         </div>
 
         {{-- Options List --}}
         <ul 
-            class="max-h-60 overflow-auto py-1 text-sm focus:outline-none"
+            class="max-h-60 overflow-auto custom-scrollbar py-1 text-sm focus:outline-none"
             role="listbox"
         >
             {{-- Filtered Options with Checkboxes --}}
@@ -233,7 +233,7 @@
                                 type="checkbox"
                                 :checked="isSelected(option.value)"
                                 x-on:click.stop="toggleOption(option)"
-                                class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                                class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer"
                             >
                         </div>
                         
@@ -241,7 +241,7 @@
                         <div class="flex-1 min-w-0">
                             <span 
                                 x-text="option.label"
-                                :class="isSelected(option.value) ? 'font-semibold text-blue-700 dark:text-blue-300' : 'text-gray-900 dark:text-white'"
+                                :class="isSelected(option.value) ? 'font-semibold text-primary-700 dark:text-primary-300' : 'text-gray-900 dark:text-white'"
                                 class="block truncate"
                             ></span>
                             <template x-if="option.sublabel">

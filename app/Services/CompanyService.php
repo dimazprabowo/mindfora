@@ -2,18 +2,22 @@
 
 namespace App\Services;
 
+use App\Enums\CompanyStatus;
 use App\Models\Company;
 use App\Traits\HasDynamicLike;
+use App\Traits\SortsQuery;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class CompanyService
 {
-    use HasDynamicLike;
+    use HasDynamicLike, SortsQuery;
 
     public function getFiltered(
         ?string $search = null,
         ?string $statusFilter = null,
-        int $perPage = 15
+        int $perPage = 15,
+        ?string $sortField = null,
+        string $sortDir = 'asc'
     ): LengthAwarePaginator {
         $query = Company::withCount('users');
 
@@ -21,10 +25,10 @@ class CompanyService
             $operator = $this->getLikeOperator();
             $query->where(function ($q) use ($search, $operator) {
                 $q->where('code', $operator, "%{$search}%")
-                  ->orWhere('name', $operator, "%{$search}%")
-                  ->orWhere('email', $operator, "%{$search}%")
-                  ->orWhere('phone', $operator, "%{$search}%")
-                  ->orWhere('pic_name', $operator, "%{$search}%");
+                    ->orWhere('name', $operator, "%{$search}%")
+                    ->orWhere('email', $operator, "%{$search}%")
+                    ->orWhere('phone', $operator, "%{$search}%")
+                    ->orWhere('pic_name', $operator, "%{$search}%");
             });
         }
 
@@ -32,7 +36,21 @@ class CompanyService
             $query->where('status', $statusFilter);
         }
 
-        return $query->orderBy('name')->paginate($perPage);
+        $sortable = [
+            'name' => 'companies.name',
+            'code' => 'companies.code',
+            'npwp' => 'companies.npwp',
+            'email' => 'companies.email',
+            'pic_name' => 'companies.pic_name',
+            'users_count' => '(SELECT COUNT(*) FROM users WHERE users.company_id = companies.id)',
+            'status' => 'CASE companies.status '
+                .collect(CompanyStatus::cases())->map(fn ($s, $i) => "WHEN '{$s->value}' THEN {$i}")->implode(' ')
+                .' ELSE '.count(CompanyStatus::cases()).' END',
+        ];
+
+        $this->applySorting($query, $sortable, $sortField, $sortDir, 'name', 'asc', 'companies.id');
+
+        return $query->paginate($perPage);
     }
 
     public function create(array $data): Company
@@ -43,6 +61,7 @@ class CompanyService
     public function update(Company $company, array $data): Company
     {
         $company->update($data);
+
         return $company;
     }
 
@@ -55,6 +74,7 @@ class CompanyService
     {
         $newStatus = $company->status->value === 'active' ? 'inactive' : 'active';
         $company->update(['status' => $newStatus]);
+
         return $company;
     }
 }

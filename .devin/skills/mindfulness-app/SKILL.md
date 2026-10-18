@@ -37,6 +37,8 @@ triggers:
    - `App\Livewire\Traits\HasMenuItems` -> daftarkan menu baru DI SINI dengan Gate check (jangan hardcode di sidebar)
    - `App\Traits\HasDynamicLike` -> operator LIKE lintas DB (sqlite/mysql)
    - `App\Traits\HasEncryptedRouteKey` -> route-model-binding ID terenkripsi (cegah ID enumeration/IDOR)
+   - `App\Traits\SortsQuery` -> `applySorting()` whitelist + NULLS ordering + tie-break untuk semua list Service
+   - `App\Livewire\Traits\HasTableSorting` -> properti `$sortField`/`$sortDir` + `sortBy()` untuk semua tabel index
    - `App\Services\FileStorageService` -> simpan & pindah file ke storage (jangan copy-paste logic path builder)
 
 # Permission-First (ikuti template)
@@ -81,6 +83,7 @@ Pola full-page form:
 | Select | `<x-searchable-select>` | `components/searchable-select.blade.php` |
 | Select | `<x-multi-searchable-select>` | `components/multi-searchable-select.blade.php` |
 | Filter | `<x-filter-popover>` | `components/filter-popover.blade.php` |
+| Tabel | `<x-sortable-header>` | `components/sortable-header.blade.php` (th sortable: field/sortField/sortDir/compact) |
 | Notif | `<x-toast>` | `components/toast.blade.php` (auto-render di layout) |
 | Notif | `<x-action-message>` | `components/action-message.blade.php` |
 | Spinner | `<x-loading-spinner>` | `components/loading-spinner.blade.php` |
@@ -148,19 +151,48 @@ Jika butuh variant baru (mis. warna/size berbeda), EXTEND komponen yang ada via 
 
 # File Storage (pola WAJIB)
 Alur async via worker (JANGAN simpan file langsung di request):
-1. Di Livewire Component: simpan sementara -> `$file->store('temp/{fitur}', 'local')`, kirim temp_file_path + nama asli ke Service.
-2. Di Service: set kolom `file_status = 'processing'`, simpan record, lalu `dispatch(ProcessXxx::class, ...)`.
+1. Di Livewire Component: `use WithFileUploads`, simpan sementara via `FileStorageService::storeTemp($file, '{fitur}')` → return `['path' => ..., 'original_name' => ...]`. Pass payload ke Service.
+2. Di Service: bungkus `DB::transaction()`, set kolom `file_status = 'processing'`, simpan record, lalu `dispatch(ProcessXxx::class, $record->id, $tempPath, $originalName)` DI DALAM transaction.
 3. Di Job (implements ShouldQueue, $tries=3, $timeout=120, ada method failed()):
-   - Bangun path final dengan KONVENSI:
-     `{app_env}/{nama-menu-fitur}/{nama-item-slug}/{slug-nama}_{YmdHis}.{ext}`
-     contoh: `config('app.env').'/personel-certificates/'.$personelSlug.'/'.$slug.'_'.now()->format('YmdHis').'.'.$ext`
-   - Simpan via `Storage::disk(file_disk())->put(...)`, verifikasi, hapus temp, update status 'completed' + file_path/file_name/file_size/file_processed_at.
-   - Bila gagal: status 'failed' + file_error.
-4. Download/preview & delete: SELALU lewat `Storage::disk(file_disk())`.
-5. Disk pakai helper `file_disk()`; validasi upload pakai `config/file_upload.php` + helper `file_upload_validation_rule()`.
+   - Verifikasi temp file exists di disk 'local'.
+   - Panggil `FileStorageService::moveFromTemp($tempPath, $originalName, '{fitur}', [$slug])` → return `['path', 'name', 'size']`.
+   - Update record: `file_status = 'completed'` + `file_path/file_name/file_size/file_processed_at`, `file_error = null`.
+   - Bila gagal: `file_status = 'failed'` + `file_error`, throw exception (untuk retry).
+4. Download/preview & delete: SELALU lewat `FileStorageService::download()` / `FileStorageService::delete()`. JANGAN pakai `Storage::disk()` langsung di route/component.
+5. Disk pakai helper `file_disk()`; validasi upload WAJIB pakai `config/file_upload.php` + helper `file_upload_validation_rule('{field-name}', $required)`. JANGAN hardcode mimes/max di component.
+6. Cleanup temp orphan: scheduled command `uploads:cleanup-temp` (daily, hapus temp > 24 jam).
 
-PENTING (perbaikan dari template): JANGAN copy-paste logic path builder di tiap Job.
-EKSTRAK ke shared `App\Services\FileStorageService` atau helper `upload_path($fitur, array $segments, $fileName)` agar konvensi terpusat & DRY. Sediakan juga cleanup temp orphan (scheduled command).
+## Konvensi config/file_upload.php (WAJIB daftarkan field baru)
+Setiap fitur upload WAJIB punya entry di `config/file_upload.php`:
+```php
+'{fitur-name}' => [
+    'max_size' => 51200, // KB
+    'mimes' => ['mp3', 'wav', 'mp4', 'webm'],
+],
+```
+Pakai di validation: `file_upload_validation_rule('{fitur-name}', true/false)`.
+Pakai di Blade untuk display: `get_upload_config_display('{fitur-name}')` → "Max: 50 MB | Types: MP3, WAV, MP4, WEBM".
+Pakai di Blade untuk accept attr: `accept=".{{ implode(',.', get_allowed_mimes_array('{fitur-name}')) }}"`.
+
+## Pola Upload UI di Blade (WAJIB ikuti untuk UX konsisten)
+1. **Progress bar**: Alpine `x-data="{ uploading: false, progress: 0 }"` + events `x-on:livewire-upload-start/finish/cancel/error/progress`.
+2. **Selected file preview**: setelah file dipilih, tampilkan filename + size + tombol remove (X). Gunakan `is_object($file)` untuk deteksi.
+3. **Existing file info (edit mode)**: tampilkan "File saat ini: xxx" di bawah upload area. Upload file baru = ganti (replace).
+4. **Dashed upload zone**: `<label>` dengan `border-2 border-dashed` + `cursor-pointer` + `<input type="file" class="hidden">` di dalamnya.
+5. **`wire:poll.10s`**: tambahkan di container list/table saat ada item dengan `file_status === 'processing'` → auto-refresh status.
+6. **Status display**: badge `file_status->badgeClass()` + label. Saat `processing`: tampilkan spinner + teks. Saat `failed`: tampilkan error message.
+7. **Thumbnail preview**: untuk image upload, pakai `$file->temporaryUrl()` untuk preview sebelum save.
+
+## Contoh implementasi: Training Material (file utama + thumbnail)
+- **2 file per record**: file utama (audio/video) + thumbnail (image, opsional). Keduanya async via Job terpisah.
+- **2 Job**: `ProcessTrainingMaterialUpload` (file utama) + `ProcessTrainingThumbnailUpload` (thumbnail).
+- **Kolom DB**: `file_*` (status, path, name, size, error, processed_at) + `thumbnail_*` (status, path, name, size, error, processed_at).
+- **Service**: `create($data, $filePayload, $thumbnailPayload)` — dispatch kedua job di dalam transaction.
+- **Config**: `training-materials` (50MB, audio/video) + `training-thumbnail` (5MB, image) di `config/file_upload.php`.
+- **Route**: `training.download` (file utama) + `training.thumbnail` (thumbnail image) — keduanya via `FileStorageService::download()`.
+
+PENTING: JANGAN copy-paste logic path builder di tiap Job.
+EKSTRAK ke shared `App\Services\FileStorageService` (sudah ada: `storeTemp`, `moveFromTemp`, `buildPath`, `delete`, `deleteTemp`, `download`, `exists`). Sediakan juga cleanup temp orphan (scheduled command `uploads:cleanup-temp` sudah ada).
 
 # Protokol Kerja AI (WAJIB DIIKUTI URUT)
 FASE 1 - ANALISIS (tampilkan dulu, sebelum menulis kode):
@@ -199,6 +231,18 @@ Jika ada ambiguitas yang berdampak besar -> TANYA dulu, jangan berasumsi.
 - Untuk notifikasi/chat/data live: broadcast Event + listen via Livewire (`#[On('echo:...')]`).
 - Broadcast harus ShouldBroadcast, kanal privat di-authorize di `routes/channels.php`.
 - Jangan polling jika bisa broadcast.
+- `resources/js/echo.js` adalah konfigurasi Echo kanonik — JANGAN ubah/duplikat konfigurasinya. Versi baku:
+  ```js
+  window.Echo = new Echo({
+      broadcaster: 'reverb',
+      key: import.meta.env.VITE_REVERB_APP_KEY,
+      wsHost: import.meta.env.VITE_REVERB_HOST,
+      wsPort: Number(import.meta.env.VITE_REVERB_PORT || 443),
+      wssPort: Number(import.meta.env.VITE_REVERB_PORT || 443),
+      forceTLS: (import.meta.env.VITE_REVERB_SCHEME || 'https') === 'https',
+      enabledTransports: ['ws', 'wss'],
+  });
+  ```
 
 # UX Detail (wajib, bukan opsional)
 - Setiap tabel: empty state (ikon + pesan), loading state, dan pagination.
@@ -207,6 +251,48 @@ Jika ada ambiguitas yang berdampak besar -> TANYA dulu, jangan berasumsi.
 - Feedback: SELALU notifikasi hasil (sukses/gagal) via HasNotification.
 - Upload file: tampilkan status (processing/completed/failed) + progress, tombol download/preview bila selesai.
 - Responsive: uji layout mobile (stack) & desktop.
+
+## Sorting Kolom Tabel (WAJIB di SEMUA tabel index)
+Setiap tabel index WAJIB punya sorting kolom via 3 lapisan yang sudah disediakan — JANGAN tulis ulang logic-nya:
+
+1. **Component** — pakai trait `App\Livewire\Traits\HasTableSorting`, set default kolom di `mount()`, teruskan ke Service di `render()`:
+   ```php
+   use AuthorizesRequests, HasNotification, HasTableSorting, WithPagination;
+
+   public function mount()
+   {
+       $this->authorize('viewAny', Company::class);
+       $this->sortField = 'name'; // kolom default
+   }
+
+   public function render(CompanyService $service)
+   {
+       $items = $service->getFiltered($this->search, sortField: $this->sortField, sortDir: $this->sortDir);
+   }
+   ```
+   `sortBy($field)` sudah ada di trait: klik kolom sama = balik arah, kolom baru = asc, otomatis `resetPage()`.
+2. **Service** — pakai trait `App\Traits\SortsQuery` (`use HasDynamicLike, SortsQuery;`), tambah parameter `?string $sortField = null, string $sortDir = 'asc'` di `getFiltered`, lalu:
+   ```php
+   $sortable = [ // WHITELIST WAJIB — key = nama field dari UI, value = kolom/ekspresi SQL
+       'name' => 'companies.name',
+       'users_count' => '(SELECT COUNT(*) FROM users WHERE users.company_id = companies.id)', // JANGAN alias withCount ('users_count') — Postgres tidak resolve alias di dalam ekspresi ORDER BY ... IS NULL
+       'company' => '('.Company::select('name')           // relasi belongsTo -> subquery tanpa binding
+           ->whereColumn('companies.id', 'users.company_id')->limit(1)->toSql().')',
+       'status' => 'CASE companies.status '               // enum -> CASE urutan enum, bukan alfabet
+           .collect(CompanyStatus::cases())->map(fn ($s, $i) => "WHEN '{$s->value}' THEN {$i}")->implode(' ')
+           .' ELSE '.count(CompanyStatus::cases()).' END',
+   ];
+   $this->applySorting($query, $sortable, $sortField, $sortDir, 'name', 'asc', 'companies.id');
+   ```
+   `applySorting()` menangani: NULL dianggap terkecil (atas saat asc, bawah saat desc), field tidak dikenal -> fallback default, dan tie-break stabil via kolom terakhir (default `id desc`; boleh diganti mis. `key asc`).
+   Kolom many-to-many (mis. Role) JANGAN dibuat sortable — urutan "role pertama" ambigu & subquery morph-type rapuh lintas DB.
+3. **Blade** — ganti `<th>` kolom sortable dengan `<x-sortable-header>` (kolom non-sortable seperti Aksi tetap `<th>` biasa):
+   ```blade
+   <x-sortable-header field="name" :sortField="$sortField" :sortDir="$sortDir">Nama</x-sortable-header>
+   <x-sortable-header field="name" :sortField="$sortField" :sortDir="$sortDir" :compact="true">User</x-sortable-header> {{-- tabel px-4 py-2 --}}
+   <th class="px-6 py-3 text-right ...">Aksi</th>
+   ```
+   Komponen sudah mengurus indikator arah (chevron), spinner saat `wire:target="sortBy('field')"`, dan warna kolom aktif (primary).
 
 # Design System & Responsive (WAJIB, bukan opsional)
 
@@ -219,6 +305,12 @@ Jika ada ambiguitas yang berdampak besar -> TANYA dulu, jangan berasumsi.
 - Table header: `bg-gray-50 dark:bg-gray-700/50 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider`.
 - Table row: `hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors`.
 - Badge status: pakai method `badgeClass()` dari Enum, JANGAN hardcode warna di Blade.
+
+## Custom Scrollbar (WAJIB — sudah tersedia di `resources/css/app.css`)
+- `.custom-scrollbar` WAJIB dipasang di SEMUA container scrollable (`overflow-x-auto`/`overflow-y-auto`): wrapper tabel, sidebar nav, panel chat/konsultasi, dropdown select, list di modal, dll. Sudah dark-mode aware via `.dark` variant — jangan tulis variant sendiri.
+- Scrollbar halaman (elemen `html`) sudah distyle global di app.css — JANGAN override.
+- `.navbar-scroll` = scrollbar disembunyikan total; HANYA untuk nav horizontal yang scroll-nya tidak perlu terlihat.
+- DILARANG menulis CSS scrollbar baru (`::-webkit-scrollbar`, `scrollbar-width`, dll) di file lain atau inline style — extend/pakai `.custom-scrollbar` agar konsisten.
 
 ## Responsive WAJIB (cek di setiap halaman)
 - Mobile-first: tulis class mobile dulu, lalu `sm:`, `md:`, `lg:` untuk breakpoint ke atas.
@@ -282,6 +374,8 @@ JANGAN bocorkan pesan exception mentah ke user.
 - [ ] File (jika ada): async via Job/worker + FileStorageService (tanpa duplikasi path builder)
 - [ ] Export Excel & PDF (jika relevan) + permission-nya
 - [ ] Tidak ada N+1, list paginated, search/filter server-side
+- [ ] Tabel index sortable: `HasTableSorting` di component + `SortsQuery` whitelist di service + `<x-sortable-header>` di blade
+- [ ] Scrollbar: `.custom-scrollbar` di semua container scrollable; tanpa CSS scrollbar duplikat di file lain
 - [ ] Test dasar lulus + Pint bersih
 - [ ] Tidak ada dead code / field mati / duplicate logic
 - [ ] URL aman: ID terenkripsi, tidak ada ID mentah di URL/link
@@ -299,3 +393,6 @@ JANGAN bocorkan pesan exception mentah ke user.
 - Hardcode spacing/warna/typography yang inkonsisten dengan design system template
 - Membuat tabel tanpa overflow-x-auto (horizontal scroll di mobile)
 - Membuat form grid tanpa breakpoint responsif (harus adaptif 1/2/3 kolom)
+- `orderBy` manual/hardcode di Livewire component atau inline `<th>` sortable -- WAJIB `SortsQuery` di Service + `<x-sortable-header>` di blade
+- Sorting tanpa whitelist `$sortable` di Service (field bebas = celah SQL injection di orderByRaw)
+- Menulis CSS scrollbar baru/inline (`::-webkit-scrollbar`, `scrollbar-width`) -- WAJIB pakai `.custom-scrollbar` dari `app.css`

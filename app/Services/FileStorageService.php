@@ -36,7 +36,7 @@ class FileStorageService
      */
     public function storeTemp(UploadedFile $file, string $feature): array
     {
-        $path = $file->store('temp/' . trim($feature, '/'), $this->tempDisk);
+        $path = $file->store('temp/'.trim($feature, '/'), $this->tempDisk);
 
         return [
             'path' => $path,
@@ -47,16 +47,16 @@ class FileStorageService
     /**
      * Bangun path tujuan final sesuai konvensi aplikasi.
      *
-     * @param  string        $feature   Nama menu/fitur, mis. 'personel-certificates'
-     * @param  array<string> $segments  Segmen tambahan (mis. slug item), akan di-slug otomatis
-     * @param  string        $originalName Nama file asli (dipakai untuk ambil ekstensi & base name)
-     * @param  string|null   $baseName  Override nama dasar (default: dari originalName)
+     * @param  string  $feature  Nama menu/fitur, mis. 'personel-certificates'
+     * @param  array<string>  $segments  Segmen tambahan (mis. slug item), akan di-slug otomatis
+     * @param  string  $originalName  Nama file asli (dipakai untuk ambil ekstensi & base name)
+     * @param  string|null  $baseName  Override nama dasar (default: dari originalName)
      */
     public function buildPath(string $feature, array $segments, string $originalName, ?string $baseName = null): string
     {
         $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
         $base = Str::slug($baseName ?? pathinfo($originalName, PATHINFO_FILENAME)) ?: 'file';
-        $fileName = $base . '_' . now()->format('YmdHis') . ($extension ? '.' . $extension : '');
+        $fileName = $base.'_'.now()->format('YmdHis').($extension ? '.'.$extension : '');
 
         $parts = array_filter(array_map(
             fn ($segment) => Str::slug((string) $segment),
@@ -74,7 +74,7 @@ class FileStorageService
      * Pindahkan file dari lokasi sementara ke disk permanen sesuai konvensi.
      * Menghapus file temp setelah berhasil.
      *
-     * @param  array<string> $segments
+     * @param  array<string>  $segments
      * @return array{path: string, name: string, size: int}
      *
      * @throws \RuntimeException Jika file temp tidak ada atau gagal disimpan.
@@ -87,7 +87,7 @@ class FileStorageService
         ?string $baseName = null
     ): array {
         if (! Storage::disk($this->tempDisk)->exists($tempPath)) {
-            throw new \RuntimeException('Temporary file not found: ' . $tempPath);
+            throw new \RuntimeException('Temporary file not found: '.$tempPath);
         }
 
         $content = Storage::disk($this->tempDisk)->get($tempPath);
@@ -99,7 +99,7 @@ class FileStorageService
         Storage::disk($disk)->put($destination, $content);
 
         if (! Storage::disk($disk)->exists($destination)) {
-            throw new \RuntimeException('Failed to store file to disk [' . $disk . ']: ' . $destination);
+            throw new \RuntimeException('Failed to store file to disk ['.$disk.']: '.$destination);
         }
 
         Storage::disk($this->tempDisk)->delete($tempPath);
@@ -143,6 +143,37 @@ class FileStorageService
     public function download(string $path, ?string $downloadName = null)
     {
         return Storage::disk(file_disk())->download($path, $downloadName);
+    }
+
+    /**
+     * Stream a file inline (for browser playback via <audio>/<video> tags).
+     * Returns a response with Content-Disposition: inline so the browser
+     * can play the media directly instead of forcing a download.
+     *
+     * Supports HTTP Range requests for media seeking.
+     */
+    public function stream(string $path, ?string $displayName = null)
+    {
+        $disk = Storage::disk(file_disk());
+        $fullPath = $disk->path($path);
+        $mimeType = $disk->mimeType($path);
+        $size = $disk->size($path);
+
+        return response()->stream(function () use ($fullPath) {
+            $handle = fopen($fullPath, 'rb');
+            while (! feof($handle)) {
+                echo fread($handle, 8192);
+                ob_flush();
+                flush();
+            }
+            fclose($handle);
+        }, 200, [
+            'Content-Type' => $mimeType,
+            'Content-Length' => $size,
+            'Content-Disposition' => 'inline; filename="'.($displayName ?? basename($path)).'"',
+            'Accept-Ranges' => 'bytes',
+            'Cache-Control' => 'private, max-age=3600',
+        ]);
     }
 
     public function exists(?string $path): bool

@@ -1,7 +1,7 @@
 @props([
     'show' => false,
-    'title' => 'Hapus Data',
-    'message' => 'Yakin ingin menghapus data ini?',
+    'title' => __('common.delete_data'),
+    'message' => __('common.confirm_delete_data'),
     'itemName' => '',
     'confirmMethod' => 'delete',
 ])
@@ -29,8 +29,8 @@
                         target="{{ $confirmMethod }}"
                         variant="danger" size="md"
                         class="px-5 py-2.5 rounded-xl shadow-sm"
-                        loadingText="Menghapus...">
-                        Ya, Hapus
+                        loadingText="{{ __('common.deleting') }}">
+                        {{ __('common.yes_delete') }}
                     </x-loading-button>
                 </div>
             </div>

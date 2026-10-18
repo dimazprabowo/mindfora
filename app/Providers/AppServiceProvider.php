@@ -5,15 +5,26 @@ namespace App\Providers;
 use App\Models\Chat;
 use App\Models\ChatMessage;
 use App\Models\Company;
+use App\Models\Department;
 use App\Models\Notification;
 use App\Models\SystemConfiguration;
+use App\Models\TestAttempt;
+use App\Models\TestProgram;
+use App\Models\TestProgramAssignment;
+use App\Models\TestProgramWeek;
+use App\Models\TrainingMaterial;
 use App\Models\User;
 use App\Policies\ChatPolicy;
 use App\Policies\CompanyPolicy;
 use App\Policies\DashboardPolicy;
+use App\Policies\DepartmentPolicy;
 use App\Policies\NotificationPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\SystemConfigurationPolicy;
+use App\Policies\TestAttemptPolicy;
+use App\Policies\TestProgramAssignmentPolicy;
+use App\Policies\TestProgramPolicy;
+use App\Policies\TrainingMaterialPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
@@ -38,14 +49,25 @@ class AppServiceProvider extends ServiceProvider
         // Register Policies
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Company::class, CompanyPolicy::class);
+        Gate::policy(Department::class, DepartmentPolicy::class);
         Gate::policy(SystemConfiguration::class, SystemConfigurationPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(Notification::class, NotificationPolicy::class);
         Gate::policy(Chat::class, ChatPolicy::class);
         Gate::policy(ChatMessage::class, ChatPolicy::class);
+        Gate::policy(TestProgram::class, TestProgramPolicy::class);
+        Gate::policy(TestProgramAssignment::class, TestProgramAssignmentPolicy::class);
+        Gate::policy(TestAttempt::class, TestAttemptPolicy::class);
+        Gate::policy(TestProgramWeek::class, TestAttemptPolicy::class);
+        Gate::policy(TrainingMaterial::class, TrainingMaterialPolicy::class);
 
         // Dashboard policy — bound to a string key (no Eloquent model)
         Gate::define('viewStats', [DashboardPolicy::class, 'viewStats']);
+
+        // Consultation — user can start consultation chat (bound to string key)
+        Gate::define('consultation_start', function (User $user): bool {
+            return $user->can('test_attempts_view_own');
+        });
 
         // Super admin bypasses all permission checks
         Gate::before(function ($user, $ability) {
@@ -62,7 +84,7 @@ class AppServiceProvider extends ServiceProvider
     private function applySystemConfigurations(): void
     {
         try {
-            if (!Schema::hasTable('system_configurations')) {
+            if (! Schema::hasTable('system_configurations')) {
                 return;
             }
 

@@ -1,11 +1,11 @@
 <x-auth-shell>
     <div class="mb-8">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Lupa Password?</h2>
+        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{{ __('auth.forgot_password_title') }}</h2>
         <p class="text-gray-600 dark:text-gray-400 mt-2 text-sm sm:text-base">
             @if($emailSent)
-                Link reset password telah dikirim ke email Anda. Silakan cek inbox atau folder spam.
+                {{ __('auth.reset_link_sent') }}
             @else
-                Masukkan email Anda dan kami akan mengirimkan link untuk reset password.
+                {{ __('auth.forgot_password_subtitle') }}
             @endif
         </p>
     </div>
@@ -18,13 +18,13 @@
             <!-- Email Address -->
             <div>
                 <x-input-label for="email" value="Email" :required="true" />
-                <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="email" placeholder="nama@email.com" />
+                <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="email" placeholder="{{ __('auth.email_placeholder') }}" />
                 <x-input-error :messages="$errors->get('email')" class="mt-2" />
             </div>
 
             <button
                 type="submit"
-                class="w-full inline-flex items-center justify-center px-4 py-3 bg-blue-600 border border-transparent rounded-lg font-semibold text-base text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full inline-flex items-center justify-center px-4 py-3 bg-primary-600 border border-transparent rounded-lg font-semibold text-base text-white uppercase tracking-widest hover:bg-primary-700 focus:bg-primary-700 active:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
                 wire:loading.attr="disabled"
                 wire:target="sendResetLink">
 
@@ -44,12 +44,12 @@
 
                     <!-- TEXT NORMAL -->
                     <span wire:loading.class="hidden" wire:target="sendResetLink">
-                        Kirim Link Reset Password
+                        {{ __('auth.send_reset_link') }}
                     </span>
 
                     <!-- TEXT LOADING -->
                     <span wire:loading wire:target="sendResetLink">
-                        Mengirim...
+                        {{ __('auth.sending') }}
                     </span>
 
                 </span>
@@ -63,22 +63,22 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
                 <div>
-                    <h3 class="text-sm font-medium text-green-800 dark:text-green-200">Email Terkirim!</h3>
+                    <h3 class="text-sm font-medium text-green-800 dark:text-green-200">{{ __('auth.email_sent') }}</h3>
                     <p class="text-sm text-green-700 dark:text-green-300 mt-1">
-                        Silakan cek email Anda untuk link reset password. Link akan kadaluarsa dalam 60 menit.
+                        {{ __('auth.reset_link_sent_detail') }}
                     </p>
                 </div>
             </div>
         </div>
 
         <button type="button" wire:click="$set('emailSent', false)" class="w-full inline-flex items-center justify-center px-4 py-3 bg-gray-200 dark:bg-gray-700 border border-transparent rounded-lg font-semibold text-base text-gray-700 dark:text-gray-200 uppercase tracking-widest hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
-            Kirim Ulang
+            {{ __('auth.resend') }}
         </button>
     @endif
 
     <div class="mt-6 text-center">
-        <a href="{{ route('login') }}" wire:navigate class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors">
-            &larr; Kembali ke Login
+        <a href="{{ route('login') }}" wire:navigate class="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 font-medium transition-colors">
+            &larr; {{ __('auth.back_to_login') }}
         </a>
     </div>
 </x-auth-shell>

@@ -1,9 +1,22 @@
 /**
  * Alpine.js Store Definitions
  * Shared between app and guest layouts to avoid duplication.
+ *
+ * Timing robustness: Livewire's <script> (regular, non-module) executes
+ * before Vite's module scripts (deferred). On DOMContentLoaded,
+ * Livewire starts Alpine → dispatches "alpine:init".
+ *
+ * We register stores on "alpine:init" (normal path) AND immediately if
+ * window.Alpine is already available (edge-case fallback). The "notify"
+ * event listener is registered OUTSIDE alpine:init so it is always active,
+ * even if stores weren't registered in time.
  */
 
-document.addEventListener('alpine:init', () => {
+/**
+ * Register all Alpine stores. Safe to call multiple times — each store
+ * checks if it already exists before registering.
+ */
+function registerStores() {
     if (!Alpine.store('layout')) {
         Alpine.store('layout', {
             mode: localStorage.getItem('layoutMode') || 'sidebar',
@@ -82,12 +95,6 @@ document.addEventListener('alpine:init', () => {
                 this.items = this.items.filter(i => i.id !== id);
             }
         });
-
-        // Listen for Livewire notify events
-        window.addEventListener('notify', (e) => {
-            const notification = Array.isArray(e.detail) ? e.detail[0] : e.detail;
-            Alpine.store('notification').add(notification.type || 'success', notification.message || '', notification.title);
-        });
     }
 
     if (!Alpine.store('darkMode')) {
@@ -100,7 +107,62 @@ document.addEventListener('alpine:init', () => {
             },
         });
     }
+
+    if (!Alpine.store('locale')) {
+        // Read cookie set by SetLocale middleware (server-side) for initial state.
+        // Fall back to localStorage, then to <html lang="..."> attribute.
+        const htmlLang = document.documentElement.lang;
+        const cookieMatch = document.cookie.match(/(?:^|;\s*)locale=([^;]+)/);
+        const initial = cookieMatch?.[1] || localStorage.getItem('locale') || htmlLang || 'id';
+
+        Alpine.store('locale', {
+            current: initial,
+            locales: {
+                id: { label: 'Bahasa', short: 'ID' },
+                en: { label: 'English', short: 'EN' },
+            },
+            switch(code) {
+                if (!this.locales[code]) return;
+                // 1. Persist to localStorage (instant UI feedback, like dark mode)
+                localStorage.setItem('locale', code);
+                // 2. Set cookie (server-readable on next request, expires in 1 year)
+                document.cookie = 'locale=' + code + ';path=/;max-age=31536000;samesite=lax';
+                // 3. Update UI state
+                this.current = code;
+                // 4. Reload page so Blade re-renders translations server-side
+                window.location.reload();
+            },
+        });
+    }
+}
+
+/**
+ * Listen for Livewire notify events IMMEDIATELY (not inside alpine:init).
+ * If the notification store isn't registered yet, attempt to register
+ * all stores on-the-fly before handling the event.
+ */
+window.addEventListener('notify', (e) => {
+    if (!window.Alpine || typeof Alpine.store !== 'function') return;
+
+    const notification = Array.isArray(e.detail) ? e.detail[0] : e.detail;
+
+    // Ensure notification store exists before calling .add()
+    if (!Alpine.store('notification')) {
+        registerStores();
+    }
+
+    const store = Alpine.store('notification');
+    if (store) {
+        store.add(notification.type || 'success', notification.message || '', notification.title);
+    }
 });
+
+// Register stores: immediately if Alpine is already loaded, otherwise on alpine:init
+if (window.Alpine && typeof Alpine.store === 'function') {
+    registerStores();
+} else {
+    document.addEventListener('alpine:init', registerStores);
+}
 
 /**
  * Dark mode sync — keeps <html> class in sync with localStorage.

@@ -2,28 +2,28 @@
     <div class="mb-6 flex flex-col md:flex-row md:items-center gap-3">
         <!-- Search -->
         <div class="flex-1 w-full md:w-auto">
-            <input wire:model.live.debounce.300ms="search" type="text" placeholder="Cari user..."
-                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+            <input wire:model.live.debounce.300ms="search" type="text" placeholder="{{ __('settings.search_user') }}"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
         </div>
 
         <!-- Filter Popover -->
         <x-filter-popover :filters="['isActiveFilter', 'roleFilter']">
             <div>
-                <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Status Aktif</label>
+                <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('settings.active_status') }}</label>
                 <x-searchable-select
                     wire:model.live="isActiveFilter"
                     :options="$this->isActiveOptions"
-                    placeholder="Semua Status"
-                    searchPlaceholder="Cari status..."
+                    :placeholder="__('settings.all_status')"
+                    :searchPlaceholder="__('settings.search_status')"
                 />
             </div>
             <div>
-                <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Role</label>
+                <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('settings.role') }}</label>
                 <x-searchable-select
                     wire:model.live="roleFilter"
                     :options="$this->roleOptions"
-                    placeholder="Semua Role"
-                    searchPlaceholder="Cari role..."
+                    :placeholder="__('settings.all_roles')"
+                    :searchPlaceholder="__('settings.search_role')"
                 />
             </div>
         </x-filter-popover>
@@ -31,7 +31,7 @@
         <!-- Action Buttons -->
         <div class="flex items-center gap-2 w-full md:w-auto">
             @can('users_export_excel')
-                <x-loading-button wire:click="exportExcel" target="exportExcel" variant="success" size="md" loadingText="Exporting..." title="Export Excel">
+                <x-loading-button wire:click="exportExcel" target="exportExcel" variant="success" size="md" :loadingText="__('settings.exporting')" title="{{ __('common.export_excel') }}">
                     <x-slot:icon>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     </x-slot:icon>
@@ -39,7 +39,7 @@
                 </x-loading-button>
             @endcan
             @can('users_export_pdf')
-                <x-loading-button wire:click="exportPdf" target="exportPdf" variant="danger" size="md" loadingText="Exporting..." title="Export PDF">
+                <x-loading-button wire:click="exportPdf" target="exportPdf" variant="danger" size="md" :loadingText="__('settings.exporting')" title="{{ __('common.export_pdf') }}">
                     <x-slot:icon>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                     </x-slot:icon>
@@ -47,27 +47,27 @@
                 </x-loading-button>
             @endcan
             @can('users_create')
-                <x-loading-button wire:click="create" target="create" variant="primary" size="md" loadingText="Memuat..." class="flex-1 md:flex-none">
+                <x-loading-button wire:click="create" target="create" variant="primary" size="md" :loadingText="__('common.loading')" class="flex-1 md:flex-none">
                     <x-slot:icon>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     </x-slot:icon>
-                    Tambah User
+                    {{ __('settings.add_user') }}
                 </x-loading-button>
             @endcan
         </div>
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto custom-scrollbar">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-900">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Role</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Company</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Aksi</th>
+                        <x-sortable-header field="name" :sortField="$sortField" :sortDir="$sortDir">{{ __('settings.user') }}</x-sortable-header>
+                        <x-sortable-header field="email" :sortField="$sortField" :sortDir="$sortDir">{{ __('common.email') }}</x-sortable-header>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('settings.role') }}</th>
+                        <x-sortable-header field="company" :sortField="$sortField" :sortDir="$sortDir">{{ __('settings.company') }}</x-sortable-header>
+                        <x-sortable-header field="is_active" :sortField="$sortField" :sortDir="$sortDir">{{ __('common.status') }}</x-sortable-header>
+                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('common.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -76,7 +76,7 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-10 w-10">
-                                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold">
+                                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-semibold">
                                             {{ substr($user->name, 0, 1) }}
                                         </div>
                                     </div>
@@ -97,26 +97,26 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @php
                                     $roleColors = [
-                                        'super admin' => 'bg-amber-100 text-amber-800 dark:bg-amber-900/20 dark:text-amber-400',
-                                        'admin' => 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400',
-                                        'manager' => 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-400',
-                                        'sbu' => 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400',
-                                        'kacab' => 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
-                                        'inspector' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400',
-                                        'user' => 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400',
+                                        'super admin' => 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200',
+                                        'admin' => 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-200',
+                                        'manager' => 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-200',
+                                        'sbu' => 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200',
+                                        'kacab' => 'bg-primary-100 text-primary-800 dark:bg-primary-900/50 dark:text-primary-200',
+                                        'inspector' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-200',
+                                        'user' => 'bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-200',
                                     ];
                                 @endphp
                                 @if($user->roles->isNotEmpty())
                                     <div class="flex flex-wrap gap-1">
                                         @foreach($user->roles as $role)
-                                            @php $colorClass = $roleColors[$role->name] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'; @endphp
+                                            @php $colorClass = $roleColors[$role->name] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-200'; @endphp
                                             <span wire:key="user-role-{{ $user->id }}-{{ $role->id }}" class="inline-flex items-center whitespace-nowrap px-2 py-1 text-xs font-medium rounded-full {{ $colorClass }}">
                                                 {{ ucfirst($role->name) }}
                                             </span>
                                         @endforeach
                                     </div>
                                 @else
-                                    <span class="inline-flex items-center whitespace-nowrap px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400">No Role</span>
+                                    <span class="inline-flex items-center whitespace-nowrap px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-200">{{ __('settings.no_role') }}</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -131,10 +131,10 @@
                                         target="toggleActive({{ $user->id }})"
                                         :disabled="$user->id == auth()->id()"
                                         wire:key="toggle-active-{{ $user->id }}"
-                                        title="{{ $user->id == auth()->id() ? 'Tidak dapat menonaktifkan akun sendiri' : 'Aktifkan/Nonaktifkan' }}" />
+                                        title="{{ $user->id == auth()->id() ? __('settings.cannot_deactivate_self') : __('settings.activate_deactivate') }}" />
                                 @else
-                                    <span class="inline-flex items-center whitespace-nowrap px-2 py-1 text-xs font-medium rounded-full {{ $user->is_active ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400' }}">
-                                        {{ $user->is_active ? 'Aktif' : 'Nonaktif' }}
+                                    <span class="inline-flex items-center whitespace-nowrap px-2 py-1 text-xs font-medium rounded-full {{ $user->is_active ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-200' }}">
+                                        {{ $user->is_active ? __('common.active') : __('common.inactive') }}
                                     </span>
                                 @endcan
                             </td>
@@ -145,12 +145,12 @@
                                             target="edit({{ $user->id }})"
                                             variant="icon-blue" icon="edit"
                                             wire:key="btn-edit-{{ $user->id }}"
-                                            title="Edit" />
+                                            title="{{ __('common.edit') }}" />
                                         <x-loading-button wire:click="openResetPasswordModal({{ $user->id }})"
                                             target="openResetPasswordModal({{ $user->id }})"
                                             variant="icon-amber" icon="reset"
                                             wire:key="btn-reset-{{ $user->id }}"
-                                            title="Reset Password" />
+                                            title="{{ __('settings.reset_password') }}" />
                                     @endcan
                                     @can('users_delete')
                                         @if($user->id != auth()->id())
@@ -158,7 +158,7 @@
                                                 target="confirmDelete({{ $user->id }})"
                                                 variant="icon-red" icon="delete"
                                                 wire:key="btn-delete-{{ $user->id }}"
-                                                title="Hapus" />
+                                                title="{{ __('common.delete') }}" />
                                         @endif
                                     @endcan
                                 </div>
@@ -170,7 +170,7 @@
                                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                                 </svg>
-                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Tidak ada user ditemukan</p>
+                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ __('settings.no_users') }}</p>
                             </td>
                         </tr>
                     @endforelse
@@ -192,39 +192,39 @@
                     <form wire:submit="save">
                         <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                                {{ $editMode ? 'Edit User' : 'Tambah User' }}
+                                {{ $editMode ? __('settings.edit_user') : __('settings.add_user') }}
                             </h3>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="md:col-span-2">
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('settings.full_name') }} <span class="text-red-500">*</span></label>
                                     <input wire:model="name" type="text"
-                                        placeholder="Masukkan nama lengkap"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                        placeholder="{{ __('settings.enter_full_name') }}"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
                                     @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                 </div>
 
                                 <div class="md:col-span-2">
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email <span class="text-red-500">*</span></label>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('common.email') }} <span class="text-red-500">*</span></label>
                                     <input wire:model="email" type="email"
                                         placeholder="nama@email.com"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
                                     @error('email') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                 </div>
 
                                 <div x-data="{ showPassword: false }">
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Password @if(!$editMode)<span class="text-red-500">*</span>@endif
+                                        {{ __('settings.password') }} @if(!$editMode)<span class="text-red-500">*</span>@endif
                                         <br>
                                         <span class="text-xs text-gray-500 dark:text-gray-400">
-                                            {{ $editMode ? '(kosongkan jika tidak ingin mengubah)' : '' }}
+                                            {{ $editMode ? __('settings.password_leave_blank') : '' }}
                                         </span>
                                     </label>
                                     
                                     <div class="relative">
                                         <input wire:model="password" :type="showPassword ? 'text' : 'password'"
-                                            placeholder="{{ $editMode ? 'Kosongkan jika tidak diubah' : 'Masukkan password' }}"
-                                            class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                            placeholder="{{ $editMode ? __('settings.password_leave_blank') : __('settings.password_placeholder_create') }}"
+                                            class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
                                         <button type="button"
                                                 @click="showPassword = !showPassword"
                                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
@@ -242,16 +242,16 @@
 
                                 <div x-data="{ showPasswordConfirmation: false }">
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Konfirmasi Password @if(!$editMode)<span class="text-red-500">*</span>@endif
+                                        {{ __('settings.confirm_password') }} @if(!$editMode)<span class="text-red-500">*</span>@endif
                                         <br>
                                         <span class="text-xs text-gray-500 dark:text-gray-400">
-                                            {{ $editMode ? '(kosongkan jika tidak ingin mengubah)' : '' }}
+                                            {{ $editMode ? __('settings.password_leave_blank') : '' }}
                                         </span>
                                     </label>
                                     <div class="relative">
                                         <input wire:model="password_confirmation" :type="showPasswordConfirmation ? 'text' : 'password'"
-                                            placeholder="{{ $editMode ? 'Kosongkan jika tidak diubah' : 'Ulangi password' }}"
-                                            class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                            placeholder="{{ $editMode ? __('settings.password_leave_blank') : __('settings.password_confirm_placeholder_create') }}"
+                                            class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
                                         <button type="button"
                                                 @click="showPasswordConfirmation = !showPasswordConfirmation"
                                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
@@ -267,12 +267,12 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Role <span class="text-red-500">*</span></label>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('settings.role') }} <span class="text-red-500">*</span></label>
                                     <x-multi-searchable-select
                                         wire:model="selectedRoles"
                                         :options="$roles->map(fn($r) => ['value' => $r->name, 'label' => ucfirst($r->name)])->toArray()"
-                                        placeholder="Pilih role..."
-                                        searchPlaceholder="Cari role..."
+                                        :placeholder="__('settings.select_role')"
+                                        :searchPlaceholder="__('settings.search_role')"
                                         :error="$errors->has('selectedRoles')"
                                     />
                                     @error('selectedRoles') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
@@ -280,37 +280,37 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Company (Optional)</label>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('settings.company_optional') }}</label>
                                     <x-searchable-select
                                         wire:model.live="company_id"
                                         :options="$companies->map(fn($c) => ['value' => $c->id, 'label' => $c->name])->toArray()"
-                                        placeholder="Tidak ada"
-                                        searchPlaceholder="Cari perusahaan..."
+                                        :placeholder="__('settings.none')"
+                                        :searchPlaceholder="__('settings.search_company')"
                                         :error="$errors->has('company_id')"
                                     />
                                     @error('company_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Telepon</label>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('common.phone') }}</label>
                                     <input wire:model="phone" type="text"
                                         placeholder="08123456789"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
                                     @error('phone') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Posisi/Jabatan</label>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('settings.position') }}</label>
                                     <input wire:model="position" type="text"
-                                        placeholder="Contoh: Manager, Staff"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                        placeholder="{{ __('settings.position_placeholder') }}"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
                                     @error('position') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                 </div>
 
                                 <div class="md:col-span-2">
                                     <label class="flex items-center">
-                                        <input wire:model="is_active" type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">User Aktif</span>
+                                        <input wire:model="is_active" type="checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ __('settings.user_active') }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -318,8 +318,8 @@
 
                         <div class="bg-gray-50 dark:bg-gray-900 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2">
                             <x-loading-button type="submit" target="save" variant="primary" size="lg"
-                                loadingText="Menyimpan..." class="w-full sm:w-auto">
-                                {{ $editMode ? 'Update' : 'Simpan' }}
+                                :loadingText="__('settings.saving')" class="w-full sm:w-auto">
+                                {{ $editMode ? __('settings.update') : __('common.save') }}
                             </x-loading-button>
                             <x-cancel-button wire:click="closeModal" target="closeModal"
                                 class="mt-3 sm:mt-0 w-full sm:w-auto" />
@@ -337,8 +337,8 @@
     <x-delete-modal 
         :show="$showDeleteModal"
         wire:model="showDeleteModal"
-        title="Hapus User"
-        message="Apakah Anda yakin ingin menghapus user"
+        :title="__('settings.delete_user')"
+        :message="__('settings.delete_user_confirm')"
         :itemName="$deletingUserName"
         confirmMethod="delete"
     />

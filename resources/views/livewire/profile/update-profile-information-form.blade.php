@@ -1,24 +1,24 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            {{ __('Profile Information') }}
+            {{ __('profile.profile_information') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __("Update your account's profile information and email address.") }}
+            {{ __('profile.update_profile_info_description') }}
         </p>
     </header>
 
     <form wire:submit="updateProfileInformation" class="mt-6 space-y-6">
         <div>
-            <x-input-label for="name" :value="__('Name')" :required="true" />
-            <x-text-input wire:model="name" id="name" name="name" type="text" class="mt-1 block w-full" placeholder="Masukkan nama" autofocus autocomplete="name" />
+            <x-input-label for="name" :value="__('common.name')" :required="true" />
+            <x-text-input wire:model="name" id="name" name="name" type="text" class="mt-1 block w-full" placeholder="{{ __('profile.name_placeholder') }}" autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('Email')" :required="true" />
-            <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full" placeholder="nama@email.com" autocomplete="username" />
+            <x-input-label for="email" value="Email" :required="true" />
+            <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full" placeholder="{{ __('auth.email_placeholder') }}" autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if ($authUser->pending_email)
@@ -31,12 +31,12 @@
                             <div class="flex items-start justify-between gap-3">
                                 <div class="flex-1">
                                     <p class="text-sm font-medium text-yellow-800 dark:text-yellow-300">
-                                        Email Menunggu Verifikasi
+                                        {{ __('profile.email_pending_verification') }}
                                     </p>
                                     <p class="text-sm text-yellow-700 dark:text-yellow-400 mt-1">
-                                        Email Anda saat ini: <strong>{{ $authUser->email }}</strong><br>
-                                        Email baru: <strong>{{ $authUser->pending_email }}</strong><br>
-                                        Silakan cek inbox email baru untuk verifikasi. Email akan berubah setelah verifikasi berhasil.
+                                        {{ __('profile.current_email_label') }} <strong>{{ $authUser->email }}</strong><br>
+                                        {{ __('profile.new_email_label') }} <strong>{{ $authUser->pending_email }}</strong><br>
+                                        {{ __('profile.pending_email_verification_instructions') }}
                                     </p>
                                 </div>
                                 <button 
@@ -64,12 +64,12 @@
 
                                         <!-- TEKS NORMAL -->
                                         <span wire:loading.class="hidden" wire:target="sendVerification">
-                                            Kirim Ulang
+                                            {{ __('auth.resend') }}
                                         </span>
 
                                         <!-- TEKS LOADING -->
                                         <span wire:loading wire:target="sendVerification">
-                                            Mengirim...
+                                            {{ __('auth.sending') }}
                                         </span>
 
                                     </span>
@@ -84,30 +84,30 @@
             @if ($authUser instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $authUser->hasVerifiedEmail() && ! $authUser->pending_email)
                 <div>
                     <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                        {{ __('Your email address is unverified.') }}
+                        {{ __('profile.email_unverified') }}
 
-                        <button 
-                            wire:click.prevent="sendVerification" 
+                        <button
+                            wire:click.prevent="sendVerification"
                             wire:loading.attr="disabled"
                             wire:target="sendVerification"
-                            class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
+                            class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
                         >
                             <span wire:loading.remove wire:target="sendVerification">
-                                {{ __('Click here to re-send the verification email.') }}
+                                {{ __('profile.resend_verification_link') }}
                             </span>
                             <span wire:loading wire:target="sendVerification" class="inline-flex items-center gap-2">
                                 <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                Mengirim...
+                                {{ __('auth.sending') }}
                             </span>
                         </button>
                     </p>
 
                     @if (session('status') === 'verification-link-sent')
                         <p class="mt-2 font-medium text-sm text-green-600 dark:text-green-400">
-                            {{ __('A new verification link has been sent to your email address.') }}
+                            {{ __('auth.verification_link_sent') }}
                         </p>
                     @endif
                 </div>
@@ -131,12 +131,12 @@
 
                     <!-- TEKS NORMAL -->
                     <span wire:loading.remove wire:target="updateProfileInformation">
-                        {{ __('Save') }}
+                        {{ __('common.save') }}
                     </span>
 
                     <!-- TEKS LOADING -->
                     <span wire:loading wire:target="updateProfileInformation">
-                        Menyimpan...
+                        {{ __('profile.saving') }}
                     </span>
 
                 </span>
@@ -144,7 +144,7 @@
 
 
             <x-action-message class="me-3" on="profile-updated">
-                {{ __('Saved.') }}
+                {{ __('profile.saved') }}
             </x-action-message>
         </div>
     </form>

@@ -37,6 +37,43 @@ class PermissionSeeder extends Seeder
             'companies_export_excel',
             'companies_export_pdf',
 
+            // Master Data — Departemen
+            'departments_view',
+            'departments_create',
+            'departments_update',
+            'departments_delete',
+            'departments_export_excel',
+            'departments_export_pdf',
+
+            // Program Test
+            'test_programs_view',
+            'test_programs_create',
+            'test_programs_update',
+            'test_programs_delete',
+            'test_programs_export_excel',
+            'test_programs_export_pdf',
+            'test_programs_publish',
+
+            // Program Assignment (penjadwalan ke periode/bulan)
+            'test_assignments_view',
+            'test_assignments_create',
+            'test_assignments_update',
+            'test_assignments_delete',
+
+            // Hasil Test / Attempt
+            'test_attempts_view',        // admin/super admin — lihat hasil semua peserta
+            'test_attempts_view_own',    // user — riwayat sendiri
+
+            // Materi Pelatihan
+            'training_materials_view',
+            'training_materials_create',
+            'training_materials_update',
+            'training_materials_delete',
+            'training_materials_view_public', // user — akses library materi
+
+            // Konsultasi
+            'consultation_start',
+
             // Konfigurasi System
             'configuration_view',
             'configuration_update',

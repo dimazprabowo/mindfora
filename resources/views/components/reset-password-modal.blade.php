@@ -35,13 +35,13 @@ class="fixed inset-0 z-50 overflow-y-auto">
                                 <!-- New Password -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Password Baru <span class="text-red-500">*</span>
+                                        {{ __('common.new_password') }} <span class="text-red-500">*</span>
                                     </label>
                                     <div class="relative">
                                         <input wire:model="newPassword"
                                                :type="showPassword ? 'text' : 'password'"
-                                               class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                                               placeholder="Masukkan password baru">
+                                               class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
+                                               placeholder="{{ __('common.enter_new_password') }}">
                                         <button type="button"
                                                 @click="showPassword = !showPassword"
                                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
@@ -62,13 +62,13 @@ class="fixed inset-0 z-50 overflow-y-auto">
                                 <!-- Confirm Password -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Konfirmasi Password <span class="text-red-500">*</span>
+                                        {{ __('common.confirm_password') }} <span class="text-red-500">*</span>
                                     </label>
                                     <div class="relative">
                                         <input wire:model="newPasswordConfirmation"
                                                :type="showPasswordConfirmation ? 'text' : 'password'"
-                                               class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                                               placeholder="Konfirmasi password baru">
+                                               class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
+                                               placeholder="{{ __('common.confirm_new_password') }}">
                                         <button type="button"
                                                 @click="showPasswordConfirmation = !showPasswordConfirmation"
                                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
@@ -87,8 +87,8 @@ class="fixed inset-0 z-50 overflow-y-auto">
                                 </div>
 
                                 <div class="text-xs text-gray-500 dark:text-gray-400">
-                                    <p>• Password minimal 8 karakter</p>
-                                    <p>• Gunakan kombinasi huruf, angka, dan simbol</p>
+                                    <p>â€¢ {{ __('common.password_min_length') }}</p>
+                                    <p>â€¢ {{ __('common.password_requirements') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -98,7 +98,7 @@ class="fixed inset-0 z-50 overflow-y-auto">
                 <!-- Actions -->
                 <div class="bg-gray-50 dark:bg-gray-900 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2">
                     <x-loading-button type="submit" target="confirmResetPassword" variant="warning" size="lg"
-                        loadingText="Mereset..." class="w-full sm:w-auto sm:ml-3">
+                        loadingText="{{ __('common.resetting') }}" class="w-full sm:w-auto sm:ml-3">
                         Reset Password
                     </x-loading-button>
                     <x-cancel-button wire:click="closeResetPasswordModal" target="closeResetPasswordModal"

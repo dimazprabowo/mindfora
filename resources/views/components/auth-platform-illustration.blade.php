@@ -1,126 +1,105 @@
 {{--
-    Auth Platform Illustration - Generic enterprise application visual.
+    Auth Platform Illustration - Mindfulness wellness visual.
 
-    Template (boilerplate) context: enterprise application platform with
-    authentication, role-based access control, and user management.
-    Visual language: clean blueprint style with security shield center,
-    user management card, and permission/role nodes connected by lines.
+    Mindfulness context: 4-week mindfulness program for stress management.
+    Visual language: organic, calming — lotus flower center (peace/rebirth),
+    surrounding leaves (growth/nature), gentle waves (breath/flow), and
+    soft circular meditation rings (focus/mindfulness).
 
-    Uses currentColor so it inherits the white text color of the blue
-    gradient branding panel. Inline SVG (no external asset dependency).
+    Uses currentColor so it inherits the white/primary-100 text color of
+    the green gradient branding panel. Inline SVG (no external asset dependency).
 --}}
 <svg class="w-full h-auto max-w-md mx-auto" viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" aria-hidden="true">
-    {{-- Outer frame: application platform container --}}
-    <rect x="40" y="40" width="400" height="240" rx="12" stroke-width="1.5" opacity="0.4"/>
-    <rect x="40" y="40" width="400" height="32" rx="12" stroke-width="1.5" opacity="0.5"/>
-    <rect x="40" y="56" width="400" height="16" fill="currentColor" opacity="0.05"/>
 
-    {{-- Window controls (top-left dots) --}}
-    <circle cx="56" cy="56" r="3" stroke-width="1.5" opacity="0.6"/>
-    <circle cx="68" cy="56" r="3" stroke-width="1.5" opacity="0.6"/>
-    <circle cx="80" cy="56" r="3" stroke-width="1.5" opacity="0.6"/>
+    {{-- Outer meditation rings (concentric circles — focus/mindfulness) --}}
+    <circle cx="240" cy="160" r="140" stroke-width="0.8" opacity="0.12"/>
+    <circle cx="240" cy="160" r="110" stroke-width="0.8" opacity="0.18"/>
+    <circle cx="240" cy="160" r="80" stroke-width="0.8" opacity="0.24"/>
 
-    {{-- Top bar title --}}
-    <rect x="200" y="50" width="80" height="12" rx="2" stroke-width="1" opacity="0.4"/>
+    {{-- Gentle waves (breath/flow) — bottom --}}
+    <path d="M 40 250 Q 120 230 200 250 T 360 250 T 440 250" stroke-width="1.5" opacity="0.35" stroke-linecap="round"/>
+    <path d="M 40 265 Q 120 245 200 265 T 360 265 T 440 265" stroke-width="1.2" opacity="0.25" stroke-linecap="round"/>
+    <path d="M 40 280 Q 120 260 200 280 T 360 280 T 440 280" stroke-width="1" opacity="0.18" stroke-linecap="round"/>
 
-    {{-- Central security shield (authentication) --}}
-    <g transform="translate(200, 130)">
-        {{-- Shield outline --}}
-        <path d="M 40 -30 L 40 30 Q 40 50 20 55 Q 0 50 0 30 L 0 -30 Q 20 -40 40 -30 Z"
-              stroke-width="2" opacity="0.9"/>
-        {{-- Shield inner fill --}}
-        <path d="M 40 -30 L 40 30 Q 40 50 20 55 Q 0 50 0 30 L 0 -30 Q 20 -40 40 -30 Z"
-              fill="currentColor" opacity="0.08"/>
-        {{-- Checkmark inside shield --}}
-        <path d="M 12 5 L 18 12 L 28 -2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
-        {{-- Lock icon above shield --}}
-        <rect x="14" y="-20" width="12" height="10" rx="1.5" stroke-width="1.5" opacity="0.7"/>
-        <path d="M 16 -20 L 16 -25 Q 16 -28 20 -28 Q 24 -28 24 -25 L 24 -20" stroke-width="1.5" opacity="0.7"/>
+    {{-- Gentle waves (breath/flow) — top --}}
+    <path d="M 40 70 Q 120 50 200 70 T 360 70 T 440 70" stroke-width="1.2" opacity="0.2" stroke-linecap="round"/>
+    <path d="M 40 55 Q 120 35 200 55 T 360 55 T 440 55" stroke-width="1" opacity="0.14" stroke-linecap="round"/>
+
+    {{-- Lotus flower (center — peace/rebirth/mindfulness) --}}
+    <g transform="translate(240, 160)" opacity="0.9">
+
+        {{-- Center petal (upright) --}}
+        <path d="M 0 -55 Q -12 -30 0 0 Q 12 -30 0 -55 Z"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity="0.12"/>
+
+        {{-- Left inner petal --}}
+        <path d="M -8 -45 Q -28 -25 -22 5 Q -10 -10 -8 -45 Z"
+              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity="0.08"/>
+
+        {{-- Right inner petal --}}
+        <path d="M 8 -45 Q 28 -25 22 5 Q 10 -10 8 -45 Z"
+              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity="0.08"/>
+
+        {{-- Left outer petal (wider, lower) --}}
+        <path d="M -15 -35 Q -42 -15 -38 15 Q -22 0 -15 -35 Z"
+              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity="0.05"/>
+
+        {{-- Right outer petal (wider, lower) --}}
+        <path d="M 15 -35 Q 42 -15 38 15 Q 22 0 15 -35 Z"
+              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity="0.05"/>
+
+        {{-- Left bottom petal (low, wide) --}}
+        <path d="M -20 -20 Q -48 -2 -45 25 Q -28 8 -20 -20 Z"
+              stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity="0.03"/>
+
+        {{-- Right bottom petal (low, wide) --}}
+        <path d="M 20 -20 Q 48 -2 45 25 Q 28 8 20 -20 Z"
+              stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity="0.03"/>
+
+        {{-- Lotus base (water line / pedestal) --}}
+        <path d="M -45 25 Q 0 35 45 25" stroke-width="1.8" stroke-linecap="round" opacity="0.5"/>
+        <path d="M -38 32 Q 0 42 38 32" stroke-width="1.3" stroke-linecap="round" opacity="0.35"/>
+
+        {{-- Center dot (focus point / third eye) --}}
+        <circle cx="0" cy="-15" r="3.5" fill="currentColor" opacity="0.85"/>
+        <circle cx="0" cy="-15" r="6" stroke-width="1" opacity="0.4"/>
     </g>
 
-    {{-- Left card: User Management --}}
-    <g transform="translate(70, 110)">
-        <rect x="0" y="0" width="100" height="120" rx="8" stroke-width="1.5" opacity="0.5"/>
-        <rect x="0" y="0" width="100" height="20" rx="8" stroke-width="1.5" opacity="0.6"/>
-        {{-- Header dot --}}
-        <circle cx="12" cy="10" r="3" stroke-width="1.5" opacity="0.7"/>
-        <rect x="22" y="6" width="60" height="8" rx="2" stroke-width="1" opacity="0.4"/>
-
-        {{-- User rows --}}
-        <g transform="translate(10, 32)">
-            {{-- User 1 --}}
-            <circle cx="8" cy="8" r="6" stroke-width="1.5" opacity="0.7"/>
-            <path d="M 4 14 Q 8 10 12 14" stroke-width="1.5" opacity="0.7"/>
-            <rect x="22" y="4" width="60" height="4" rx="1" stroke-width="1" opacity="0.4"/>
-            <rect x="22" y="11" width="40" height="3" rx="1" stroke-width="1" opacity="0.3"/>
-            {{-- Active badge --}}
-            <circle cx="86" cy="8" r="3" fill="currentColor" opacity="0.6"/>
-        </g>
-        <g transform="translate(10, 56)">
-            <circle cx="8" cy="8" r="6" stroke-width="1.5" opacity="0.7"/>
-            <path d="M 4 14 Q 8 10 12 14" stroke-width="1.5" opacity="0.7"/>
-            <rect x="22" y="4" width="55" height="4" rx="1" stroke-width="1" opacity="0.4"/>
-            <rect x="22" y="11" width="35" height="3" rx="1" stroke-width="1" opacity="0.3"/>
-            <circle cx="86" cy="8" r="3" fill="currentColor" opacity="0.6"/>
-        </g>
-        <g transform="translate(10, 80)">
-            <circle cx="8" cy="8" r="6" stroke-width="1.5" opacity="0.7"/>
-            <path d="M 4 14 Q 8 10 12 14" stroke-width="1.5" opacity="0.7"/>
-            <rect x="22" y="4" width="50" height="4" rx="1" stroke-width="1" opacity="0.4"/>
-            <rect x="22" y="11" width="30" height="3" rx="1" stroke-width="1" opacity="0.3"/>
-            <circle cx="86" cy="8" r="3" stroke-width="1.5" opacity="0.5"/>
-        </g>
+    {{-- Floating leaves (growth/nature) — scattered around lotus --}}
+    {{-- Top-left leaf --}}
+    <g transform="translate(95, 100) rotate(-35)" opacity="0.5">
+        <path d="M 0 0 Q -8 -18 0 -36 Q 8 -18 0 0 Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity="0.08"/>
+        <path d="M 0 0 L 0 -32" stroke-width="0.8" opacity="0.5"/>
     </g>
 
-    {{-- Right card: Role / Permission matrix --}}
-    <g transform="translate(310, 110)">
-        <rect x="0" y="0" width="100" height="120" rx="8" stroke-width="1.5" opacity="0.5"/>
-        <rect x="0" y="0" width="100" height="20" rx="8" stroke-width="1.5" opacity="0.6"/>
-        {{-- Header gear icon --}}
-        <circle cx="12" cy="10" r="4" stroke-width="1.5" opacity="0.7"/>
-        <path d="M 12 4 L 12 6 M 12 14 L 12 16 M 6 10 L 8 10 M 16 10 L 18 10" stroke-width="1.5" opacity="0.7"/>
-        <rect x="22" y="6" width="60" height="8" rx="2" stroke-width="1" opacity="0.4"/>
-
-        {{-- Role rows with permission toggles --}}
-        <g transform="translate(10, 30)">
-            {{-- Role label --}}
-            <rect x="0" y="2" width="40" height="6" rx="2" stroke-width="1" opacity="0.5"/>
-            {{-- Permission toggles (3 columns) --}}
-            <rect x="50" y="0" width="10" height="10" rx="2" stroke-width="1.5" opacity="0.7"/>
-            <path d="M 53 5 L 55 7 L 58 3" stroke-width="1.5" opacity="0.9"/>
-            <rect x="66" y="0" width="10" height="10" rx="2" stroke-width="1.5" opacity="0.7"/>
-            <path d="M 69 5 L 71 7 L 74 3" stroke-width="1.5" opacity="0.9"/>
-            <rect x="82" y="0" width="10" height="10" rx="2" stroke-width="1.5" opacity="0.4"/>
-        </g>
-        <g transform="translate(10, 54)">
-            <rect x="0" y="2" width="35" height="6" rx="2" stroke-width="1" opacity="0.5"/>
-            <rect x="50" y="0" width="10" height="10" rx="2" stroke-width="1.5" opacity="0.7"/>
-            <path d="M 53 5 L 55 7 L 58 3" stroke-width="1.5" opacity="0.9"/>
-            <rect x="66" y="0" width="10" height="10" rx="2" stroke-width="1.5" opacity="0.4"/>
-            <rect x="82" y="0" width="10" height="10" rx="2" stroke-width="1.5" opacity="0.4"/>
-        </g>
-        <g transform="translate(10, 78)">
-            <rect x="0" y="2" width="45" height="6" rx="2" stroke-width="1" opacity="0.5"/>
-            <rect x="50" y="0" width="10" height="10" rx="2" stroke-width="1.5" opacity="0.7"/>
-            <path d="M 53 5 L 55 7 L 58 3" stroke-width="1.5" opacity="0.9"/>
-            <rect x="66" y="0" width="10" height="10" rx="2" stroke-width="1.5" opacity="0.7"/>
-            <path d="M 69 5 L 71 7 L 74 3" stroke-width="1.5" opacity="0.9"/>
-            <rect x="82" y="0" width="10" height="10" rx="2" stroke-width="1.5" opacity="0.7"/>
-            <path d="M 85 5 L 87 7 L 90 3" stroke-width="1.5" opacity="0.9"/>
-        </g>
+    {{-- Top-right leaf --}}
+    <g transform="translate(385, 95) rotate(40)" opacity="0.5">
+        <path d="M 0 0 Q -8 -18 0 -36 Q 8 -18 0 0 Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity="0.08"/>
+        <path d="M 0 0 L 0 -32" stroke-width="0.8" opacity="0.5"/>
     </g>
 
-    {{-- Connection lines: cards <-> central shield --}}
-    <path d="M 170 170 Q 185 165 200 160" stroke-width="1" opacity="0.3" stroke-dasharray="3 3"/>
-    <path d="M 310 170 Q 295 165 280 160" stroke-width="1" opacity="0.3" stroke-dasharray="3 3"/>
+    {{-- Bottom-left small leaf --}}
+    <g transform="translate(110, 220) rotate(-60)" opacity="0.4">
+        <path d="M 0 0 Q -6 -14 0 -28 Q 6 -14 0 0 Z" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity="0.06"/>
+        <path d="M 0 0 L 0 -24" stroke-width="0.7" opacity="0.5"/>
+    </g>
 
-    {{-- Bottom status bar --}}
-    <rect x="60" y="250" width="360" height="6" rx="3" stroke-width="1" opacity="0.3"/>
-    <rect x="60" y="250" width="120" height="6" rx="3" fill="currentColor" opacity="0.4"/>
+    {{-- Bottom-right small leaf --}}
+    <g transform="translate(370, 215) rotate(65)" opacity="0.4">
+        <path d="M 0 0 Q -6 -14 0 -28 Q 6 -14 0 0 Z" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity="0.06"/>
+        <path d="M 0 0 L 0 -24" stroke-width="0.7" opacity="0.5"/>
+    </g>
 
-    {{-- Decorative corner accents --}}
-    <path d="M 40 80 L 40 60 L 60 60" stroke-width="2" opacity="0.6"/>
-    <path d="M 440 80 L 440 60 L 420 60" stroke-width="2" opacity="0.6"/>
-    <path d="M 40 240 L 40 260 L 60 260" stroke-width="2" opacity="0.6"/>
-    <path d="M 440 240 L 440 260 L 420 260" stroke-width="2" opacity="0.6"/>
+    {{-- Soft glow / aura around lotus (radial) --}}
+    <circle cx="240" cy="160" r="55" stroke-width="0.5" opacity="0.2" stroke-dasharray="2 4"/>
+    <circle cx="240" cy="160" r="65" stroke-width="0.5" opacity="0.12" stroke-dasharray="2 6"/>
+
+    {{-- Small floating particles (calm/spaciousness) --}}
+    <circle cx="140" cy="140" r="2" fill="currentColor" opacity="0.4"/>
+    <circle cx="340" cy="150" r="2" fill="currentColor" opacity="0.4"/>
+    <circle cx="180" cy="200" r="1.5" fill="currentColor" opacity="0.3"/>
+    <circle cx="310" cy="195" r="1.5" fill="currentColor" opacity="0.3"/>
+    <circle cx="240" cy="90" r="1.5" fill="currentColor" opacity="0.35"/>
+    <circle cx="240" cy="230" r="1.5" fill="currentColor" opacity="0.3"/>
+
 </svg>

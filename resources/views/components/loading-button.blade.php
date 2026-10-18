@@ -10,13 +10,15 @@
 @php
     $variants = [
         // Filled background variants
-        'primary'   => 'bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500',
+        'primary'   => 'bg-primary-600 hover:bg-primary-700 text-white focus:ring-primary-500',
         'success'   => 'bg-emerald-600 hover:bg-emerald-700 text-white focus:ring-emerald-500',
         'danger'    => 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500',
         'warning'   => 'bg-yellow-600 hover:bg-yellow-700 text-white focus:ring-yellow-500',
-        'secondary' => 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 focus:ring-blue-500',
+        'secondary' => 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 focus:ring-primary-500',
+        // Link-style variants (text-colored, no background/border)
+        'link'      => 'text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 focus:ring-primary-500',
         // Icon-only variants (text-colored, subtle hover bg)
-        'icon-blue'   => 'p-1.5 text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 focus:ring-blue-500',
+        'icon-blue'   => 'p-1.5 text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 focus:ring-primary-500',
         'icon-red'    => 'p-1.5 text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 focus:ring-red-500',
         'icon-green'  => 'p-1.5 text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20 focus:ring-green-500',
         'icon-amber'  => 'p-1.5 text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 focus:ring-yellow-500',
@@ -47,6 +49,7 @@
         'close'   => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>',
         'external'=> '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>',
         'plus'    => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>',
+        'play'    => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4l14 8-14 8V4z"/>',
         'send'    => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>',
         'download'=> '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>',
         'pdf'     => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>',
@@ -62,7 +65,7 @@
 
     // Icon-only buttons don't use size-based padding (padding is in variant)
     $sizeClass = $isIconOnly ? '' : ($sizes[$size] ?? $sizes['md']);
-    // Spinner must match icon size to prevent layout shift on toggle (icon↔spinner)
+    // Spinner must match icon size to prevent layout shift on toggle (iconâ†”spinner)
     $finalIconClass = $iconClass ?? ($isIconOnly ? 'w-5 h-5' : 'w-4 h-4');
     $spinnerSize = $isIconOnly ? $finalIconClass : ($spinnerSizes[$size] ?? $spinnerSizes['md']);
 @endphp

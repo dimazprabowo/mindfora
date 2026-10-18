@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\EducationLevel;
+use App\Enums\Gender;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -28,12 +30,20 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'phone' => fake()->optional()->phoneNumber(),
+            'position' => fake()->optional()->jobTitle(),
+            'gender' => fake()->randomElement(Gender::cases()),
+            'birth_date' => fake()->dateTimeBetween('-60 years', '-18 years')->format('Y-m-d'),
+            'education_level' => fake()->randomElement(EducationLevel::cases()),
+            'work_started_at' => fake()->optional()->dateTimeBetween('-30 years', 'now')->format('Y-m-d'),
+            'locale' => 'id',
+            'is_active' => true,
             'remember_token' => Str::random(10),
         ];
     }
 
     /**
-     * Indicate that the model's email address should be unverified.
+     * Indicate that the model's email address is unverified.
      */
     public function unverified(): static
     {

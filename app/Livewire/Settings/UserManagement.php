@@ -4,6 +4,7 @@ namespace App\Livewire\Settings;
 
 use App\Exports\UsersExport;
 use App\Livewire\Traits\HasNotification;
+use App\Livewire\Traits\HasTableSorting;
 use App\Models\Company;
 use App\Models\User;
 use App\Services\UserService;
@@ -15,51 +16,72 @@ use Spatie\Permission\Models\Role;
 
 class UserManagement extends Component
 {
-    use WithPagination, AuthorizesRequests, HasNotification;
+    use AuthorizesRequests, HasNotification, HasTableSorting, WithPagination;
 
     protected $paginationTheme = 'tailwind';
 
     public $search = '';
+
     public $roleFilter = '';
+
     public $isActiveFilter = '';
+
     public int $perPage = 10;
+
     public bool $filterChanged = false;
+
     public $showModal = false;
+
     public $editMode = false;
-    
+
     // Form fields
     public $userId;
+
     public $name;
+
     public $email;
+
     public $password;
+
     public $password_confirmation;
+
     public $company_id;
+
     public $phone;
+
     public $position;
+
     public $is_active = true;
+
     public $selectedRoles = [];
-    
+
     // Reset Password Modal
     public $showResetPasswordModal = false;
+
     public $resetUserId;
+
     public $newPassword;
+
     public $newPasswordConfirmation;
-    
+
     // Delete Modal
     public $showDeleteModal = false;
+
     public $deletingUserId;
+
     public $deletingUserName;
 
     public function mount()
     {
         $this->authorize('viewAny', User::class);
+        $this->sortField = 'name';
     }
 
     public function rules()
     {
         $rules = [
             'name' => 'required|string|max:255',
-            'email' => ['required', 'email', $this->editMode ? 'unique:users,email,' . $this->userId : 'unique:users,email'],
+            'email' => ['required', 'email', $this->editMode ? 'unique:users,email,'.$this->userId : 'unique:users,email'],
             'company_id' => 'nullable|exists:companies,id',
             'phone' => 'nullable|string|max:20',
             'position' => 'nullable|string|max:100',
@@ -68,7 +90,7 @@ class UserManagement extends Component
             'selectedRoles.*' => 'exists:roles,name',
         ];
 
-        if (!$this->editMode) {
+        if (! $this->editMode) {
             $rules['password'] = 'required|string|min:8|confirmed';
         } elseif ($this->password) {
             $rules['password'] = 'string|min:8|confirmed';
@@ -139,7 +161,7 @@ class UserManagement extends Component
     {
         $user = User::with('roles')->findOrFail($id);
         $this->authorize('update', $user);
-        
+
         $this->userId = $user->id;
         $this->name = $user->name;
         $this->email = $user->email;
@@ -148,7 +170,7 @@ class UserManagement extends Component
         $this->position = $user->position;
         $this->is_active = $user->is_active;
         $this->selectedRoles = $user->getRoleNames()->toArray();
-        
+
         $this->editMode = true;
         $this->showModal = true;
     }
@@ -231,7 +253,7 @@ class UserManagement extends Component
             $this->authorize('toggleActive', $user);
 
             $service->toggleActive($user);
-            
+
             $status = $user->is_active ? 'diaktifkan' : 'dinonaktifkan';
             $this->notifySuccess("User berhasil {$status}!");
         } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
@@ -271,7 +293,7 @@ class UserManagement extends Component
             $this->authorize('resetPassword', $user);
 
             $service->resetPassword($user, $this->newPassword);
-            
+
             $this->notifySuccess('Password berhasil direset!');
             $this->closeResetPasswordModal();
         } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
@@ -307,7 +329,7 @@ class UserManagement extends Component
             'is_active',
             'selectedRoles',
         ]);
-        
+
         $this->is_active = true;
     }
 
@@ -316,7 +338,7 @@ class UserManagement extends Component
         $this->authorize('exportExcel', User::class);
 
         return (new UsersExport($this->search, $this->roleFilter, $this->isActiveFilter !== '' ? $this->isActiveFilter : null))
-            ->download('users-' . now()->format('Y-m-d-His') . '.xlsx');
+            ->download('users-'.now()->format('Y-m-d-His').'.xlsx');
     }
 
     public function exportPdf(UserService $service)
@@ -327,15 +349,17 @@ class UserManagement extends Component
             $this->search,
             $this->roleFilter,
             $this->isActiveFilter !== '' ? $this->isActiveFilter : null,
-            perPage: 9999
+            perPage: 9999,
+            sortField: $this->sortField,
+            sortDir: $this->sortDir
         );
 
         $pdf = Pdf::loadView('exports.users-pdf', ['users' => $users]);
         $pdf->setPaper('a4', 'landscape');
 
         return response()->streamDownload(
-            fn () => print($pdf->output()),
-            'users-' . now()->format('Y-m-d-His') . '.pdf'
+            fn () => print ($pdf->output()),
+            'users-'.now()->format('Y-m-d-His').'.pdf'
         );
     }
 
@@ -345,7 +369,9 @@ class UserManagement extends Component
             $this->search,
             $this->roleFilter,
             $this->isActiveFilter !== '' ? $this->isActiveFilter : null,
-            $this->perPage
+            $this->perPage,
+            $this->sortField,
+            $this->sortDir
         );
 
         if ($this->filterChanged) {

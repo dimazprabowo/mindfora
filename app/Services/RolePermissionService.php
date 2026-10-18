@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Eloquent\Collection;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RolePermissionService
 {
@@ -86,6 +86,43 @@ class RolePermissionService
                 ['name' => 'companies_export_pdf',   'label' => 'Export PDF Perusahaan'],
                 ['name' => 'manage_own_company',     'label' => 'Kelola Perusahaan Sendiri'],
             ],
+            'Departemen' => [
+                ['name' => 'departments_view',         'label' => 'Lihat Departemen'],
+                ['name' => 'departments_create',       'label' => 'Tambah Departemen'],
+                ['name' => 'departments_update',       'label' => 'Edit Departemen'],
+                ['name' => 'departments_delete',       'label' => 'Hapus Departemen'],
+                ['name' => 'departments_export_excel', 'label' => 'Export Excel Departemen'],
+                ['name' => 'departments_export_pdf',   'label' => 'Export PDF Departemen'],
+            ],
+            'Program Test' => [
+                ['name' => 'test_programs_view',         'label' => 'Lihat Program Test'],
+                ['name' => 'test_programs_create',       'label' => 'Tambah Program Test'],
+                ['name' => 'test_programs_update',       'label' => 'Edit Program Test'],
+                ['name' => 'test_programs_delete',       'label' => 'Hapus Program Test'],
+                ['name' => 'test_programs_publish',      'label' => 'Publish Program Test'],
+                ['name' => 'test_programs_export_excel', 'label' => 'Export Excel Program Test'],
+                ['name' => 'test_programs_export_pdf',   'label' => 'Export PDF Program Test'],
+            ],
+            'Penjadwalan Program' => [
+                ['name' => 'test_assignments_view',   'label' => 'Lihat Penjadwalan'],
+                ['name' => 'test_assignments_create', 'label' => 'Tambah Penjadwalan'],
+                ['name' => 'test_assignments_update', 'label' => 'Edit Penjadwalan'],
+                ['name' => 'test_assignments_delete', 'label' => 'Hapus Penjadwalan'],
+            ],
+            'Hasil Test' => [
+                ['name' => 'test_attempts_view',     'label' => 'Lihat Hasil Semua Peserta'],
+                ['name' => 'test_attempts_view_own', 'label' => 'Lihat Hasil Test Sendiri'],
+            ],
+            'Materi Pelatihan' => [
+                ['name' => 'training_materials_view',         'label' => 'Lihat Materi (Admin)'],
+                ['name' => 'training_materials_create',       'label' => 'Tambah Materi'],
+                ['name' => 'training_materials_update',       'label' => 'Edit Materi'],
+                ['name' => 'training_materials_delete',       'label' => 'Hapus Materi'],
+                ['name' => 'training_materials_view_public',  'label' => 'Akses Library Materi'],
+            ],
+            'Konsultasi' => [
+                ['name' => 'consultation_start', 'label' => 'Mulai Konsultasi'],
+            ],
             'Konfigurasi System' => [
                 ['name' => 'configuration_view',         'label' => 'Lihat Konfigurasi'],
                 ['name' => 'configuration_update',       'label' => 'Edit Konfigurasi'],
@@ -126,9 +163,9 @@ class RolePermissionService
 
         $groups = $groupMapping;
 
-        if (!empty($unmapped)) {
+        if (! empty($unmapped)) {
             $groups['Lainnya'] = array_values(array_map(
-                fn($p) => ['name' => $p, 'label' => ucwords(str_replace('_', ' ', $p))],
+                fn ($p) => ['name' => $p, 'label' => ucwords(str_replace('_', ' ', $p))],
                 $unmapped
             ));
         }

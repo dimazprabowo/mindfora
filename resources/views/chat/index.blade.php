@@ -1,7 +1,7 @@
-<x-app-layout title="Chat">
+<x-app-layout title="{{ __('chat.title') }}">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Chat
+            {{ __('chat.title') }}
         </h2>
     </x-slot>
 

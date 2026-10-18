@@ -3,9 +3,9 @@
 namespace App\Livewire\Profile;
 
 use App\Livewire\Traits\HasNotification;
+use App\Livewire\Traits\HasTableSorting;
 use App\Models\User;
 use App\Services\ImpersonateService;
-use App\Traits\HasDynamicLike;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -13,13 +13,20 @@ use Spatie\Permission\Models\Role;
 
 class ImpersonateUser extends Component
 {
-    use WithPagination, AuthorizesRequests, HasNotification, HasDynamicLike;
+    use AuthorizesRequests, HasNotification, HasTableSorting, WithPagination;
 
     protected $paginationTheme = 'tailwind';
 
     public string $search = '';
+
     public string $roleFilter = '';
+
     public bool $filterChanged = false;
+
+    public function mount(): void
+    {
+        $this->sortField = 'name';
+    }
 
     public function updatingSearch(): void
     {
@@ -55,19 +62,17 @@ class ImpersonateUser extends Component
         $this->redirect(route('dashboard'), navigate: true);
     }
 
-    public function render()
+    public function render(ImpersonateService $service)
     {
         abort_unless(auth()->user()->can('users_impersonate'), 403);
 
-        $operator = $this->getLikeOperator();
-        $query = User::query()
-            ->when($this->search, fn($q) => $q->where('name', $operator, "%{$this->search}%")
-                ->orWhere('email', $operator, "%{$this->search}%"))
-            ->when($this->roleFilter, fn($q) => $q->role($this->roleFilter))
-            ->where('id', '!=', auth()->id())
-            ->orderBy('name');
-
-        $users = $query->paginate(8);
+        $users = $service->getImpersonatableUsers(
+            $this->search,
+            $this->roleFilter,
+            auth()->id(),
+            $this->sortField,
+            $this->sortDir
+        );
 
         if ($this->filterChanged) {
             $this->notifySuccess("Ditemukan {$users->total()} data user.");

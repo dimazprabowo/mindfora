@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use App\Notifications\CustomVerifyEmail;
+use App\Enums\EducationLevel;
+use App\Enums\Gender;
 use App\Notifications\CustomResetPassword;
+use App\Notifications\CustomVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,7 +17,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, HasRoles, Notifiable;
 
     protected $fillable = [
         'name',
@@ -23,8 +25,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'pending_email',
         'company_id',
+        'department_id',
         'phone',
         'position',
+        'gender',
+        'birth_date',
+        'education_level',
+        'work_started_at',
+        'locale',
         'is_active',
         'email_verified_at',
     ];
@@ -39,6 +47,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'birth_date' => 'date',
+            'work_started_at' => 'date',
+            'gender' => Gender::class,
+            'education_level' => EducationLevel::class,
             'is_active' => 'boolean',
         ];
     }
@@ -47,6 +59,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
     }
 
     public function userNotifications(): HasMany
@@ -59,6 +76,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Chat::class, 'chat_participants')
             ->withPivot('last_read_at')
             ->withTimestamps();
+    }
+
+    public function testAttempts(): HasMany
+    {
+        return $this->hasMany(TestAttempt::class);
     }
 
     // Scopes
@@ -77,6 +99,16 @@ class User extends Authenticatable implements MustVerifyEmail
         return $query->where('company_id', $companyId);
     }
 
+    public function scopeByDepartment($query, int $departmentId)
+    {
+        return $query->where('department_id', $departmentId);
+    }
+
+    public function scopeParticipants($query)
+    {
+        return $query->role('user')->where('is_active', true);
+    }
+
     // Accessors
     public function getIsAdminAttribute(): bool
     {
@@ -85,7 +117,31 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getFullNameAttribute(): string
     {
-        return $this->name . ($this->position ? " ({$this->position})" : '');
+        return $this->name.($this->position ? " ({$this->position})" : '');
+    }
+
+    public function getAgeAttribute(): ?int
+    {
+        return $this->birth_date?->age;
+    }
+
+    public function getWorkDurationYearsAttribute(): ?float
+    {
+        if (! $this->work_started_at) {
+            return null;
+        }
+
+        return round($this->work_started_at->diffInYears(now()), 1);
+    }
+
+    public function getEducationLabelAttribute(): ?string
+    {
+        return $this->education_level?->label();
+    }
+
+    public function getGenderLabelAttribute(): ?string
+    {
+        return $this->gender?->label();
     }
 
     /**
@@ -104,7 +160,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         // Determine which email to send to
         $emailTo = $this->pending_email ?? $this->email;
-        
+
         // Send notification directly to the specific email
         \Illuminate\Support\Facades\Notification::route('mail', $emailTo)
             ->notify(new CustomVerifyEmail($this));
@@ -117,7 +173,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         // Determine which email to send to
         $emailTo = $this->pending_email ?? $this->email;
-        
+
         // Send notification directly to the specific email
         \Illuminate\Support\Facades\Notification::route('mail', $emailTo)
             ->notify(new CustomResetPassword($token, $this));

@@ -2,19 +2,19 @@
     <div class="mb-6 flex flex-col md:flex-row md:items-center gap-3">
         <!-- Search -->
         <div class="flex-1 w-full md:w-auto">
-            <input wire:model.live.debounce.300ms="search" type="text" placeholder="Cari perusahaan..."
-                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+            <input wire:model.live.debounce.300ms="search" type="text" placeholder="{{ __('master_data.search_company') }}"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
         </div>
 
         <!-- Filter Popover -->
         <x-filter-popover :filters="['statusFilter']">
             <div>
-                <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Status</label>
+                <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('common.status') }}</label>
                 <x-searchable-select
                     wire:model.live="statusFilter"
                     :options="$this->statusOptions"
-                    placeholder="Semua Status"
-                    searchPlaceholder="Cari status..."
+                    :placeholder="__('master_data.all_status')"
+                    :searchPlaceholder="__('master_data.search_status')"
                 />
             </div>
         </x-filter-popover>
@@ -22,7 +22,7 @@
         <!-- Action Buttons -->
         <div class="flex items-center gap-2 w-full md:w-auto">
             @can('companies_export_excel')
-                <x-loading-button wire:click="exportExcel" target="exportExcel" variant="success" size="md" loadingText="Exporting..." title="Export Excel">
+                <x-loading-button wire:click="exportExcel" target="exportExcel" variant="success" size="md" :loadingText="__('master_data.exporting')" title="{{ __('common.export_excel') }}">
                     <x-slot:icon>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     </x-slot:icon>
@@ -30,7 +30,7 @@
                 </x-loading-button>
             @endcan
             @can('companies_export_pdf')
-                <x-loading-button wire:click="exportPdf" target="exportPdf" variant="danger" size="md" loadingText="Exporting..." title="Export PDF">
+                <x-loading-button wire:click="exportPdf" target="exportPdf" variant="danger" size="md" :loadingText="__('master_data.exporting')" title="{{ __('common.export_pdf') }}">
                     <x-slot:icon>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                     </x-slot:icon>
@@ -38,28 +38,28 @@
                 </x-loading-button>
             @endcan
             @can('companies_create')
-                <x-loading-button wire:click="create" target="create" variant="primary" size="md" loadingText="Memuat..." class="flex-1 md:flex-none">
+                <x-loading-button wire:click="create" target="create" variant="primary" size="md" :loadingText="__('common.loading')" class="flex-1 md:flex-none">
                     <x-slot:icon>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     </x-slot:icon>
-                    Tambah Perusahaan
+                    {{ __('master_data.add_company') }}
                 </x-loading-button>
             @endcan
         </div>
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto custom-scrollbar">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-900">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Perusahaan</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">NPWP</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Kontak</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">PIC</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Aksi</th>
+                        <x-sortable-header field="name" :sortField="$sortField" :sortDir="$sortDir">{{ __('master_data.company') }}</x-sortable-header>
+                        <x-sortable-header field="npwp" :sortField="$sortField" :sortDir="$sortDir">{{ __('master_data.npwp') }}</x-sortable-header>
+                        <x-sortable-header field="email" :sortField="$sortField" :sortDir="$sortDir">{{ __('master_data.contact') }}</x-sortable-header>
+                        <x-sortable-header field="pic_name" :sortField="$sortField" :sortDir="$sortDir">{{ __('master_data.pic') }}</x-sortable-header>
+                        <x-sortable-header field="users_count" :sortField="$sortField" :sortDir="$sortDir">{{ __('master_data.user') }}</x-sortable-header>
+                        <x-sortable-header field="status" :sortField="$sortField" :sortDir="$sortDir">{{ __('common.status') }}</x-sortable-header>
+                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('common.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -98,8 +98,8 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center whitespace-nowrap px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
-                                    {{ $company->users_count }} user
+                                <span class="inline-flex items-center whitespace-nowrap px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-900/50 dark:text-primary-200">
+                                    {{ $company->users_count }} {{ __('master_data.user_unit') }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -108,13 +108,13 @@
                                         :active="$company->status->value === 'active'"
                                         target="toggleStatus({{ $company->id }})"
                                         wire:key="toggle-status-{{ $company->id }}"
-                                        title="Aktifkan/Nonaktifkan" />
+                                        :title="__('master_data.activate_deactivate')" />
                                 @else
                                     @php
                                         $statusColors = [
-                                            'active' => 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400',
-                                            'inactive' => 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400',
-                                            'suspended' => 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400',
+                                            'active' => 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200',
+                                            'inactive' => 'bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-200',
+                                            'suspended' => 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-200',
                                         ];
                                     @endphp
                                     <span class="px-2 py-1 text-xs font-medium rounded-full {{ $statusColors[$company->status->value] ?? $statusColors['inactive'] }}">
@@ -129,7 +129,7 @@
                                             target="edit({{ $company->id }})"
                                             variant="icon-blue" icon="edit"
                                             wire:key="btn-edit-{{ $company->id }}"
-                                            title="Edit" />
+                                            title="{{ __('common.edit') }}" />
                                     @endcan
                                     @can('companies_delete')
                                         @if($company->users_count === 0)
@@ -137,7 +137,7 @@
                                                 target="confirmDelete({{ $company->id }})"
                                                 variant="icon-red" icon="delete"
                                                 wire:key="btn-delete-{{ $company->id }}"
-                                                title="Hapus" />
+                                                title="{{ __('common.delete') }}" />
                                         @endif
                                     @endcan
                                 </div>
@@ -149,7 +149,7 @@
                                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                                 </svg>
-                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Tidak ada perusahaan ditemukan</p>
+                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ __('master_data.no_companies') }}</p>
                             </td>
                         </tr>
                     @endforelse
@@ -171,7 +171,7 @@
                     <form wire:submit="save">
                         <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                                {{ $editMode ? 'Edit Perusahaan' : 'Tambah Perusahaan' }}
+                                {{ $editMode ? __('master_data.edit_company') : __('master_data.add_company') }}
                             </h3>
 
                             <x-company-form :editMode="$editMode" :showStatus="true" />
@@ -179,8 +179,8 @@
 
                         <div class="bg-gray-50 dark:bg-gray-900 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2">
                             <x-loading-button type="submit" target="save" variant="primary" size="lg"
-                                loadingText="Menyimpan..." class="w-full sm:w-auto">
-                                {{ $editMode ? 'Update' : 'Simpan' }}
+                                :loadingText="__('master_data.saving')" class="w-full sm:w-auto">
+                                {{ $editMode ? __('master_data.update') : __('common.save') }}
                             </x-loading-button>
                             <x-cancel-button wire:click="closeModal" target="closeModal"
                                 class="mt-3 sm:mt-0 w-full sm:w-auto" />
@@ -192,11 +192,11 @@
     @endif
 
     <!-- Delete Confirmation Modal -->
-    <x-delete-modal 
+    <x-delete-modal
         :show="$showDeleteModal"
         wire:model="showDeleteModal"
-        title="Hapus Perusahaan"
-        message="Apakah Anda yakin ingin menghapus perusahaan"
+        :title="__('master_data.delete_company')"
+        :message="__('master_data.delete_company_confirm')"
         :itemName="$deletingCompanyName"
         confirmMethod="delete"
     />

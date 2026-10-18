@@ -15,6 +15,17 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->append(SecurityHeaders::class);
+        // SetLocale reads locale from cookie (not session), so it can run in
+        // the global stack before StartSession — same pattern as dark mode's
+        // localStorage, but server-readable via cookie on every request.
+        $middleware->append(\App\Http\Middleware\SetLocale::class);
+
+        // Trust the local reverse proxy (cloudflared / ngrok / Caddy) so that
+        // URL::current() and asset() generate https:// URLs when the tunnel
+        // terminates TLS upstream. cloudflared connects from 127.0.0.1 and
+        // sets X-Forwarded-Proto/Host — trusting '*' is safe here because the
+        // only proxy is the local tunnel process.
+        $middleware->trustProxies(at: '*');
 
         $middleware->alias([
             'active' => \App\Http\Middleware\EnsureUserIsActive::class,
