@@ -1,3 +1,4 @@
+<x-training-player>
 <div
     @if($materials->contains(fn ($m) => $m->file_status->value === 'processing' || ($m->thumbnail_status && $m->thumbnail_status->value === 'processing')))
         wire:poll.10s
@@ -58,7 +59,23 @@
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     @forelse($materials as $material)
-                        <tr wire:key="row-mat-{{ $material->id }}" class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
+                        @php
+                            $canPlay = $material->is_ready && $material->file_path;
+                            $materialJson = json_encode([
+                                'id' => $material->id,
+                                'title' => $material->title,
+                                'description' => $material->description,
+                                'type' => $material->type->value,
+                                'category' => $material->category,
+                                'file_size_formatted' => $material->file_size_formatted,
+                                'stream_url' => route('training.stream', $material),
+                                'download_url' => route('training.download', $material),
+                                'thumbnail_url' => $material->is_thumbnail_ready ? route('training.thumbnail', $material) : null,
+                            ]);
+                        @endphp
+                        <tr wire:key="row-mat-{{ $material->id }}"
+                            :class="currentId === {{ $material->id }} ? 'bg-primary-50 dark:bg-primary-900/10' : ''"
+                            class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     {{-- Thumbnail mini --}}
@@ -128,7 +145,11 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end gap-2">
-                                    @if($material->is_ready)
+                                    @if($canPlay)
+                                        <x-loading-button x-on:click="openPlayer({{ $materialJson }})"
+                                            variant="icon-green" icon="play"
+                                            wire:key="btn-play-{{ $material->id }}"
+                                            title="{{ __('training.play') }}" />
                                         <a href="{{ route('training.download', $material) }}"
                                            class="p-1.5 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
                                            title="Download">
@@ -373,3 +394,4 @@
         confirmMethod="delete"
     />
 </div>
+</x-training-player>
