@@ -14,6 +14,10 @@ return [
     'chat' => 'Chat',
     'settings' => 'Pengaturan',
 
+    // Bottom navigation (Android app)
+    'main_navigation' => 'Navigasi utama',
+    'more' => 'Lainnya',
+
     // Master Data children
     'companies' => 'Perusahaan',
     'departments' => 'Departemen',

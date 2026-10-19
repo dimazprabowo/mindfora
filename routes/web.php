@@ -8,8 +8,10 @@ use App\Services\FileStorageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// Public Routes
-Route::view('/', 'welcome')->name('welcome');
+// Public Routes — the Android app skips the marketing landing page and opens straight into the app.
+Route::get('/', fn () => is_native_app()
+    ? redirect()->route(auth()->check() ? 'dashboard' : 'login')
+    : view('welcome'))->name('welcome');
 
 // Language switching is handled client-side via Alpine + cookie (see
 // components/language-switcher.blade.php). SetLocale middleware reads the

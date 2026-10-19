@@ -106,6 +106,39 @@ html.dark::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, rgba(59, 130, 246, 0.5), rgba(37, 99, 235, 0.6));
 }
 
+/* Safe area (status bar, notch, gesture bar). env() bernilai 0 di browser desktop;
+   aktif di app Android (edge-to-edge + viewport-fit=cover) dan iOS Safari. */
+@layer utilities {
+    .pt-safe {
+        padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .mt-safe {
+        margin-top: env(safe-area-inset-top, 0px);
+    }
+}
+
+/* Mindfora Android app (html.native-app, lihat helper is_native_app()) */
+.native-app body {
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.native-app .app-main {
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* Ruang untuk bottom navigation (hanya tampil < lg) */
+@media (max-width: 1023.98px) {
+    .native-app .app-main {
+        padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+    }
+}
+
 /* Navbar Horizontal Scroll */
 .navbar-scroll {
     scrollbar-width: none;

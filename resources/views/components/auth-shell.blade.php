@@ -12,8 +12,9 @@
 @endphp
 
 <div class="min-h-screen flex flex-col {{ $rowDirection }} relative">
-    {{-- Floating Controls (top-right): Home + Language + Dark Mode --}}
-    <div class="fixed top-4 right-4 z-50 flex items-center gap-2">
+    {{-- Floating Controls (top-right): Home + Language + Dark Mode. Home hidden in the Android app ('/' redirects to login there). --}}
+    <div class="fixed top-4 mt-safe right-4 z-50 flex items-center gap-2">
+        @unless (is_native_app())
         <a href="{{ route('welcome') }}"
            wire:navigate
            x-data="{ loading: false }"
@@ -31,6 +32,7 @@
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
         </a>
+        @endunless
         <x-language-switcher variant="floating" />
         <button @click="$store.darkMode.toggle()"
                 class="p-3 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 dark:border-gray-700"
@@ -55,7 +57,7 @@
         {{-- Mobile Background (visible only on mobile, soft calming gradient) --}}
         <div class="lg:hidden absolute inset-0 z-0 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900"></div>
 
-        <div class="w-full max-w-md relative z-10">
+        <div class="w-full max-w-md relative z-10 pt-safe pb-safe">
             {{-- Mobile Logo (compact branding header for mobile) --}}
             <x-auth-mobile-logo />
 

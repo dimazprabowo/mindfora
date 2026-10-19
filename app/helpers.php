@@ -170,6 +170,17 @@ if (! function_exists('auth_layout_position')) {
     }
 }
 
+if (! function_exists('is_native_app')) {
+    /**
+     * Whether the current request comes from the Mindfora Android app.
+     * The Capacitor WebView appends "MindforaApp/<version>" to the User-Agent (mindfora-webapps/capacitor.config.ts).
+     */
+    function is_native_app(): bool
+    {
+        return str_contains((string) request()->userAgent(), 'MindforaApp/');
+    }
+}
+
 if (! function_exists('upload_path')) {
     /**
      * Build a permanent storage path following the app-wide convention:

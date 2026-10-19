@@ -1,7 +1,7 @@
 <div>
 {{-- Impersonation Banner --}}
 @if($isImpersonating)
-    <div class="relative z-40 bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md">
+    <div class="relative z-40 bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md pt-safe">
         <div class="px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
             <div class="flex items-center space-x-3 min-w-0">
                 <div class="flex items-center space-x-2 flex-shrink-0">
@@ -46,7 +46,7 @@
     </div>
 @endif
 
-<nav class="sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+<nav class="sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm pt-safe">
     <div class="px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
             {{-- Left Side: Burger + Logo (navbar mode) --}}

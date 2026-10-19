@@ -14,6 +14,10 @@ return [
     'chat' => 'Chat',
     'settings' => 'Settings',
 
+    // Bottom navigation (Android app)
+    'main_navigation' => 'Main navigation',
+    'more' => 'More',
+
     // Master Data children
     'companies' => 'Companies',
     'departments' => 'Departments',

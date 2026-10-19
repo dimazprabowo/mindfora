@@ -1,7 +1,7 @@
 <div x-data
      x-show="$store.notification.items.length > 0"
      x-cloak
-     class="fixed top-4 left-4 right-4 sm:left-auto sm:right-4 z-[100] flex flex-col-reverse gap-2.5 max-w-sm w-auto sm:w-full pointer-events-none">
+     class="fixed top-4 mt-safe left-4 right-4 sm:left-auto sm:right-4 z-[100] flex flex-col-reverse gap-2.5 max-w-sm w-auto sm:w-full pointer-events-none">
     <template x-for="item in $store.notification.items" :key="item.id">
         <div x-data="{ progress: 100, startX: 0, currentX: 0, dragging: false, dismissed: false,
                         onTouchStart(e) { if (e.touches.length === 1) { this.startX = e.touches[0].clientX; this.currentX = this.startX; this.dragging = true; $store.notification.pause(item.id); } },

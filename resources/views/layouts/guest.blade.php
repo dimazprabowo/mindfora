@@ -1,9 +1,9 @@
 @props(['title' => null])
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data :class="{ 'dark': $store.darkMode.dark }">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @class(['native-app' => is_native_app()]) x-data :class="{ 'dark': $store.darkMode.dark }">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ $title ? $title . ' - ' . config('app.name', 'Laravel') : config('app.name', 'Laravel') }}</title>
@@ -23,7 +23,8 @@
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         @endif
     </head>
-    <body class="font-sans text-gray-900 antialiased">
+    {{-- data-system-bars: halaman auth mobile berlatar gradien hijau gelap -> ikon status bar terang (native-bridge.js) --}}
+    <body class="font-sans text-gray-900 antialiased" data-system-bars="dark">
         {{ $slot }}
         
         <x-toast />

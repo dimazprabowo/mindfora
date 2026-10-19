@@ -11,7 +11,7 @@
          class="fixed inset-0 z-40 bg-gray-900/50 lg:hidden backdrop-blur-sm"></div>
 
     {{-- Sidebar --}}
-    <div class="fixed inset-y-0 left-0 z-50 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform transition-all duration-300 ease-in-out lg:translate-x-0 flex flex-col"
+    <div class="fixed inset-y-0 left-0 z-50 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform transition-all duration-300 ease-in-out lg:translate-x-0 flex flex-col pt-safe pb-safe"
          :class="{
              '-translate-x-full': !Alpine.store('sidebar').open,
              'w-72 sm:w-80 lg:w-64': !Alpine.store('sidebar').collapsed,

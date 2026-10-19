@@ -4,11 +4,12 @@
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+      @class(['native-app' => is_native_app()])
       x-data
       :class="{ 'dark': $store.darkMode.dark }">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ $title }} - {{ config('app.name', 'Laravel') }}</title>
@@ -82,7 +83,7 @@
                     </header>
                 @endif
 
-                <main class="py-6">
+                <main class="app-main py-6">
                     <div class="px-4 sm:px-6 lg:px-8 relative">
                         {{-- Content Loading Overlay â€” shown during wire:navigate page transitions --}}
                         <div x-data="{ navigating: false }"
@@ -110,6 +111,10 @@
                     </div>
                 </main>
             </div>
+
+            @if (is_native_app())
+                <livewire:layout.bottom-nav />
+            @endif
         </div>
 
         <x-toast />
