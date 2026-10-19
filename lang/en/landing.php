@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'App Name' => 'Mindfulness App',
     'Tagline' => 'Manage Stress, Improve Wellbeing',
     'Hero Title' => 'Measure & Manage Your Stress Level',
     'Hero Subtitle' => 'A 4-week science-based mindfulness program for factory workers. Audio training, video therapy, and periodic tests in one platform.',
@@ -21,7 +20,7 @@ return [
     'Nav Login' => 'Login',
     'Nav Register' => 'Sign Up',
     'About Title' => 'About the Program',
-    'About Description' => 'Mindfulness App is a stress level measurement and management platform designed specifically for factory workers. The program runs for 4 weeks with weekly tests, supported by audio training and video therapy materials.',
+    'About Description' => ':app is a stress level measurement and management platform designed specifically for factory workers. The program runs for 4 weeks with weekly tests, supported by audio training and video therapy materials.',
     'How It Works Title' => 'How It Works',
     'How It Works Subtitle' => '4-week program, 1 test per week',
     'Week' => 'Week',
@@ -74,7 +73,7 @@ return [
     // Quote
     'Hero Quote' => 'Inner peace is not about stopping the storm, but about learning to dance in the rain.',
 
-    'Footer Copyright' => '© :year Mindfulness App. All rights reserved.',
+    'Footer Copyright' => '© :year :app. All rights reserved.',
     'Footer About' => 'About',
     'Footer Features' => 'Features',
     'Footer Contact' => 'Contact',

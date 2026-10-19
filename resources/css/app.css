@@ -120,6 +120,23 @@ html.dark::-webkit-scrollbar-thumb {
     .mt-safe {
         margin-top: env(safe-area-inset-top, 0px);
     }
+
+    /* Floating widget di pojok bawah (kontrol ukuran teks, mini player Pelatihan) */
+    .bottom-float {
+        bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+/* Floating widget naik di atas bottom navigation app (hanya tampil < lg) */
+@media (max-width: 1023.98px) {
+    html:has([data-bottom-nav]) .bottom-float {
+        bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+/* Tombol ukuran teks naik di atas mini player Pelatihan selama player tampil */
+html:has([data-floating-player]:not([x-cloak]):not([style*="display: none"])) .font-scale-fab {
+    transform: translateY(-5.5rem);
 }
 
 /* Mindfora Android app (html.native-app, lihat helper is_native_app()) */

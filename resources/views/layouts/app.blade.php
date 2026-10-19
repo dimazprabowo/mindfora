@@ -12,19 +12,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ $title }} - {{ config('app.name', 'Laravel') }}</title>
+        <title>{{ $title }} - {{ app_name() }}</title>
 
         <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
 
-        <!-- Anti-FOUC: Apply dark mode instantly -->
-        <script>
-            (function() {
-                var d = localStorage.getItem('darkMode');
-                if (d === 'true' || (d === null && matchMedia('(prefers-color-scheme: dark)').matches)) {
-                    document.documentElement.classList.add('dark');
-                }
-            })();
-        </script>
+        <x-anti-fouc-script />
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -118,6 +110,7 @@
         </div>
 
         <x-toast />
+        <x-font-scale-control />
 
         @if(session('sso_success'))
             <div x-data x-init='$nextTick(() => $store.notification.add("success", @json(session("sso_success"))))' class="hidden"></div>

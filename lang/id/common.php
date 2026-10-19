@@ -107,4 +107,17 @@ return [
     'confirm_new_password' => 'Konfirmasi password baru',
     'password_min_length' => 'Password minimal 8 karakter',
     'password_requirements' => 'Gunakan kombinasi huruf, angka, dan simbol',
+
+    // Font size (aksesibilitas)
+    'font_size' => 'Ukuran Teks',
+    'font_size_hint' => 'Perbesar tulisan agar lebih mudah dibaca',
+    'font_size_increase' => 'Perbesar teks',
+    'font_size_decrease' => 'Perkecil teks',
+    'font_size_reset' => 'Kembalikan ke ukuran normal',
+    'font_size_levels' => [
+        100 => 'Normal',
+        115 => 'Besar',
+        130 => 'Lebih Besar',
+        145 => 'Sangat Besar',
+    ],
 ];

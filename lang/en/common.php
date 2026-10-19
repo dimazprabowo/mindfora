@@ -107,4 +107,17 @@ return [
     'confirm_new_password' => 'Confirm new password',
     'password_min_length' => 'Password must be at least 8 characters',
     'password_requirements' => 'Use a combination of letters, numbers, and symbols',
+
+    // Font size (accessibility)
+    'font_size' => 'Text Size',
+    'font_size_hint' => 'Make the text bigger and easier to read',
+    'font_size_increase' => 'Increase text size',
+    'font_size_decrease' => 'Decrease text size',
+    'font_size_reset' => 'Reset to normal size',
+    'font_size_levels' => [
+        100 => 'Normal',
+        115 => 'Large',
+        130 => 'Larger',
+        145 => 'Extra Large',
+    ],
 ];

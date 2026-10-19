@@ -108,6 +108,18 @@ function registerStores() {
         });
     }
 
+    if (!Alpine.store('fontScale')) {
+        // Available levels live in components/font-scale-control.blade.php; this store only persists & applies.
+        Alpine.store('fontScale', {
+            percent: storedFontScale(),
+            set(percent) {
+                this.percent = percent;
+                localStorage.setItem('fontScale', percent);
+                applyFontScale(percent);
+            },
+        });
+    }
+
     if (!Alpine.store('locale')) {
         // Read cookie set by SetLocale middleware (server-side) for initial state.
         // Fall back to localStorage, then to <html lang="..."> attribute.
@@ -177,7 +189,22 @@ syncDarkMode();
 document.addEventListener('livewire:navigated', syncDarkMode);
 window.addEventListener('storage', function (e) {
     if (e.key === 'darkMode') syncDarkMode();
+    if (e.key === 'fontScale') applyFontScale(storedFontScale());
 });
+
+/**
+ * Font scale (accessibility for older users) — scales the root font-size, so every rem-based
+ * Tailwind size (text, icons, spacing) grows proportionally. Initial value applied by <x-anti-fouc-script />.
+ */
+function storedFontScale() {
+    return parseInt(localStorage.getItem('fontScale'), 10) || 100;
+}
+
+function applyFontScale(percent) {
+    document.documentElement.style.fontSize = percent > 100 ? `${percent}%` : '';
+}
+
+document.addEventListener('livewire:navigated', () => applyFontScale(storedFontScale()));
 
 /**
  * Cleanup orphaned x-teleport elements on Livewire SPA navigation.

@@ -6,9 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ $title ? $title . ' - ' . config('app.name', 'Laravel') : config('app.name', 'Laravel') }}</title>
+        <title>{{ $title ? $title . ' - ' . app_name() : app_name() }}</title>
 
         <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+
+        <x-anti-fouc-script />
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -28,5 +30,6 @@
         {{ $slot }}
         
         <x-toast />
+        <x-font-scale-control />
     </body>
 </html>

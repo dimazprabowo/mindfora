@@ -112,6 +112,6 @@ class ConfigHelper
      */
     public static function getAppName(): string
     {
-        return SystemConfiguration::get('app.name', config('app.name', 'Mindfulness App'));
+        return SystemConfiguration::get('app.name', config('app.name', 'Mindfora'));
     }
 }

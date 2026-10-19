@@ -295,7 +295,8 @@
          x-transition:leave="transition ease-in duration-200"
          x-transition:leave-start="opacity-100 translate-y-0"
          x-transition:leave-end="opacity-0 translate-y-4"
-         class="fixed bottom-4 right-4 left-4 sm:left-auto sm:w-96 z-40">
+         data-floating-player
+         class="fixed bottom-float right-4 left-4 sm:left-auto sm:w-96 z-40">
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="flex items-center gap-3 p-3">
                 {{-- Thumbnail / icon --}}

@@ -35,7 +35,7 @@ class UserFactory extends Factory
             'gender' => fake()->randomElement(Gender::cases()),
             'birth_date' => fake()->dateTimeBetween('-60 years', '-18 years')->format('Y-m-d'),
             'education_level' => fake()->randomElement(EducationLevel::cases()),
-            'work_started_at' => fake()->optional()->dateTimeBetween('-30 years', 'now')->format('Y-m-d'),
+            'work_started_at' => fake()->optional()->dateTimeBetween('-30 years', 'now')?->format('Y-m-d'),
             'locale' => 'id',
             'is_active' => true,
             'remember_token' => Str::random(10),

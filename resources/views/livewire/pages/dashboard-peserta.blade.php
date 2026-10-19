@@ -7,7 +7,7 @@
             <div>
                 <h2 class="text-2xl font-bold">{{ __('dashboard.hello') }}, {{ $authUser->name }}!</h2>
                 <p class="mt-1 text-primary-100 text-sm">
-                    {{ config('app.name') }} &mdash; {{ __('dashboard.manage_stress_wellbeing') }}
+                    {{ app_name() }} &mdash; {{ __('dashboard.manage_stress_wellbeing') }}
                 </p>
                 <div class="mt-3 inline-flex items-center whitespace-nowrap gap-2 bg-white/20 rounded-full px-3 py-1 text-xs font-semibold">
                     <span class="w-2 h-2 bg-green-400 rounded-full"></span>

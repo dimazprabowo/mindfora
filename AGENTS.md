@@ -1,4 +1,4 @@
-# Panduan Menjalankan Mindfulness App
+# Panduan Menjalankan Mindfora
 
 > Dokumen ini adalah runbook mandiri. Buka file ini setiap kali mau menjalankan / menghentikan / men-deploy aplikasi. Tidak perlu tanya AI lagi untuk hal-hal yang sudah tertulis di sini.
 >
@@ -32,7 +32,7 @@ C:\Users\<username>\AppData\Local\Microsoft\WinGet\Packages\Cloudflare.cloudflar
 ## 2. Setup Awal (hanya sekali, atau setelah reset repo)
 
 ```powershell
-cd D:\PROJECT\FREELANCE\mindfulness-app
+cd D:\PROJECT\FREELANCE\mindfora
 
 composer install --no-interaction --prefer-dist
 copy .env.example .env                 # kalau .env belum ada
@@ -56,7 +56,7 @@ Aplikasi butuh **3 proses** berjalan bersamaan. Buka **3 terminal terpisah** (Po
 ### Terminal 1 — Laravel Server (HTTP)
 
 ```powershell
-cd D:\PROJECT\FREELANCE\mindfulness-app
+cd D:\PROJECT\FREELANCE\mindfora
 php artisan serve --host=127.0.0.1 --port=8211
 ```
 
@@ -72,7 +72,7 @@ Akses lokal: http://127.0.0.1:8211
 Tanpa worker ini, upload training material/thumbnail **stuck di status "processing" selamanya**.
 
 ```powershell
-cd D:\PROJECT\FREELANCE\mindfulness-app
+cd D:\PROJECT\FREELANCE\mindfora
 php artisan queue:work --queue=default --tries=3 --timeout=120 --sleep=3
 ```
 
@@ -125,7 +125,7 @@ Tutup ketiga terminal di atas (atau tekan `Ctrl+C` di masing-masing terminal). T
 ## 7. Build Asset (setiap habis ubah CSS/JS/Blade yang pakai Vite)
 
 ```powershell
-cd D:\PROJECT\FREELANCE\mindfulness-app
+cd D:\PROJECT\FREELANCE\mindfora
 npm run build
 ```
 
@@ -179,12 +179,12 @@ Panduan ini untuk **demo / development**. Untuk produksi sebenarnya:
 
 **Terminal 1:**
 ```powershell
-cd D:\PROJECT\FREELANCE\mindfulness-app; php artisan serve --host=127.0.0.1 --port=8211
+cd D:\PROJECT\FREELANCE\mindfora; php artisan serve --host=127.0.0.1 --port=8211
 ```
 
 **Terminal 2:**
 ```powershell
-cd D:\PROJECT\FREELANCE\mindfulness-app; php artisan queue:work --queue=default --tries=3 --timeout=120 --sleep=3
+cd D:\PROJECT\FREELANCE\mindfora; php artisan queue:work --queue=default --tries=3 --timeout=120 --sleep=3
 ```
 
 **Terminal 3:**

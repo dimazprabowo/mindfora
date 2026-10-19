@@ -215,8 +215,9 @@
             </div>
 
             {{-- Center: Page Title (mobile only) --}}
-            <div class="flex-1 lg:hidden">
-                <h1 class="text-lg font-semibold text-gray-900 dark:text-white text-center">
+            {{-- Single line; long titles end with "..." (min-w-0 lets the flex item shrink so truncate works) --}}
+            <div class="flex-1 min-w-0 px-2 lg:hidden">
+                <h1 class="truncate text-lg font-semibold text-gray-900 dark:text-white text-center" title="{{ $title ?? __('menu.dashboard') }}">
                     {{ $title ?? __('menu.dashboard') }}
                 </h1>
             </div>

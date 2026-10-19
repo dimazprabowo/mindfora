@@ -1,15 +1,15 @@
 ---
-name: mindfulness-plan-testprogram
-description: Rencana implementasi fitur inti Mindfulness App — Program Test 4 minggu (unlock rule), Program Assignment ke periode/bulan, Pelatihan, Riwayat, Konsultasi, Landing Page hijau fresh, tema warna, dan multi-bahasa. Gunakan skill ini setiap kali melanjutkan/mengeksekusi task-task tersebut.
+name: mindfora-plan-testprogram
+description: Rencana implementasi fitur inti Mindfora — Program Test 4 minggu (unlock rule), Program Assignment ke periode/bulan, Pelatihan, Riwayat, Konsultasi, Landing Page hijau fresh, tema warna, dan multi-bahasa. Gunakan skill ini setiap kali melanjutkan/mengeksekusi task-task tersebut.
 triggers:
   - user
   - model
 ---
 
 # Cara Pakai Skill Ini
-Skill ini adalah **rencana kerja (roadmap)**, BUKAN pengganti `mindfulness-app` skill (yang berisi aturan arsitektur/konvensi wajib). Selalu ikuti KEDUA skill ini bersamaan:
-- `mindfulness-app` → aturan HOW (pola Livewire, Service, Policy, komponen, dll — wajib dipatuhi).
-- `mindfulness-plan-testprogram` (skill ini) → aturan WHAT (fitur apa, urutan apa, keputusan bisnis apa yang sudah disepakati).
+Skill ini adalah **rencana kerja (roadmap)**, BUKAN pengganti `mindfora` skill (yang berisi aturan arsitektur/konvensi wajib). Selalu ikuti KEDUA skill ini bersamaan:
+- `mindfora` → aturan HOW (pola Livewire, Service, Policy, komponen, dll — wajib dipatuhi).
+- `mindfora-plan-testprogram` (skill ini) → aturan WHAT (fitur apa, urutan apa, keputusan bisnis apa yang sudah disepakati).
 
 Setiap kali diminta lanjutkan development fitur ini, baca skill ini dulu untuk tahu progres & keputusan yang sudah difinalkan, supaya tidak tanya ulang hal yang sudah dijawab user.
 
@@ -212,4 +212,4 @@ Semua `[SLOT FOTO]` dibuat sebagai placeholder (div border dashed + label jelas 
 - [x] 12. Update `HasMenuItems` (menu baru per role) + Dashboard (statistik super admin/admin)
 - [x] 13. Testing (Pest/PHPUnit dasar) + `./vendor/bin/pint` + verifikasi `migrate:fresh --seed`
 
-**Cara kerja per langkah**: tetap ikuti Protokol Kerja AI di skill `mindfulness-app` (FASE 1 Analisis → FASE 2 Rencana detail file → FASE 3 Eksekusi → FASE 4 Verifikasi + Definition of Done checklist), langkah di atas hanya urutan besar (epic), bukan pengganti protokol per-fitur.
+**Cara kerja per langkah**: tetap ikuti Protokol Kerja AI di skill `mindfora` (FASE 1 Analisis → FASE 2 Rencana detail file → FASE 3 Eksekusi → FASE 4 Verifikasi + Definition of Done checklist), langkah di atas hanya urutan besar (epic), bukan pengganti protokol per-fitur.

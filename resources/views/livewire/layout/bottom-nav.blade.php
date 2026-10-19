@@ -1,4 +1,4 @@
-<nav class="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl border-t border-gray-200 dark:border-gray-700 shadow-[0_-4px_16px_-8px_rgba(0,0,0,0.12)] pb-safe select-none"
+<nav data-bottom-nav class="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl border-t border-gray-200 dark:border-gray-700 shadow-[0_-4px_16px_-8px_rgba(0,0,0,0.12)] pb-safe select-none"
      aria-label="{{ __('menu.main_navigation') }}">
     <div class="flex h-16 items-stretch px-1">
         @foreach ($tabs as $tab)

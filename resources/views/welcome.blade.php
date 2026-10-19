@@ -6,9 +6,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="{{ __('landing.Hero Subtitle') }}">
 
-    <title>{{ __('landing.App Name') }} - {{ __('landing.Tagline') }}</title>
+    <title>{{ app_name() }} - {{ __('landing.Tagline') }}</title>
 
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+
+    <x-anti-fouc-script />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -20,16 +22,6 @@
     @livewireStyles
 </head>
 <body class="font-sans text-gray-900 antialiased bg-white dark:bg-gray-950 dark:text-gray-100 overflow-x-hidden">
-
-    {{-- Anti-FOUC: Apply dark mode instantly before Alpine loads --}}
-    <script>
-        (function() {
-            var d = localStorage.getItem('darkMode');
-            if (d === 'true' || (d === null && matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            }
-        })();
-    </script>
 
     {{-- Landing page animations --}}
     <style>
@@ -137,7 +129,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 21V8M9 11l3-3 3 3M9 14l3-3 3 3M9 17l3-3 3 3"/>
                         </svg>
                     </div>
-                    <span class="font-bold text-lg text-gray-900 dark:text-white tracking-tight">{{ __('landing.App Name') }}</span>
+                    <span class="font-bold text-lg text-gray-900 dark:text-white tracking-tight">{{ app_name() }}</span>
                 </a>
 
                 {{-- Desktop/Tablet Nav: Horizontal scrollable menu with arrow buttons (mirrors admin navbar pattern) --}}
@@ -536,7 +528,7 @@
                             {{ __('landing.About Title') }}
                         </h2>
                         <p class="mt-6 text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-                            {{ __('landing.About Description') }}
+                            {{ __('landing.About Description', ['app' => app_name()]) }}
                         </p>
                     </div>
 
@@ -890,7 +882,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 21V8M9 11l3-3 3 3M9 14l3-3 3 3M9 17l3-3 3 3"/>
                             </svg>
                         </div>
-                        <span class="font-bold text-white text-lg tracking-tight">{{ __('landing.App Name') }}</span>
+                        <span class="font-bold text-white text-lg tracking-tight">{{ app_name() }}</span>
                     </div>
                     <p class="mt-5 text-sm leading-relaxed">{{ __('landing.Tagline') }}</p>
                 </div>
@@ -920,7 +912,7 @@
 
             {{-- Copyright --}}
             <div class="mt-12 pt-8 border-t border-gray-800 text-center text-sm">
-                {{ __('landing.Footer Copyright', ['year' => date('Y')]) }}
+                {{ __('landing.Footer Copyright', ['year' => date('Y'), 'app' => app_name()]) }}
             </div>
         </div>
     </footer>
@@ -946,6 +938,7 @@
     </script>
 
     <x-toast />
+    <x-font-scale-control />
 
     {{-- Livewire scripts (Alpine.js bundled in): placed at end of <body> to match the
          placement Livewire's auto-injection uses on all other pages. This keeps the

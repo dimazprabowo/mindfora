@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'App Name' => 'Mindfulness App',
     'Tagline' => 'Kelola Stres, Tingkatkan Kesejahteraan',
     'Hero Title' => 'Ukur & Kelola Tingkat Stres Anda',
     'Hero Subtitle' => 'Program mindfulness 4 minggu berbasis ilmiah untuk pekerja pabrik. Pelatihan audio, video terapi, dan tes berkala dalam satu platform.',
@@ -21,7 +20,7 @@ return [
     'Nav Login' => 'Masuk',
     'Nav Register' => 'Daftar',
     'About Title' => 'Tentang Program',
-    'About Description' => 'Mindfulness App adalah platform pengukuran dan pengelolaan tingkat stres yang dirancang khusus untuk pekerja pabrik. Program berjalan selama 4 minggu dengan tes mingguan, didukung materi pelatihan audio dan video terapi.',
+    'About Description' => ':app adalah platform pengukuran dan pengelolaan tingkat stres yang dirancang khusus untuk pekerja pabrik. Program berjalan selama 4 minggu dengan tes mingguan, didukung materi pelatihan audio dan video terapi.',
     'How It Works Title' => 'Cara Kerja',
     'How It Works Subtitle' => 'Program 4 minggu, 1 tes per minggu',
     'Week' => 'Minggu',
@@ -74,7 +73,7 @@ return [
     // Quote
     'Hero Quote' => 'Ketenangan batin bukan tentang menghentikan badai, tetapi tentang belajar menari dalam hujan.',
 
-    'Footer Copyright' => '© :year Mindfulness App. Hak cipta dilindungi.',
+    'Footer Copyright' => '© :year :app. Hak cipta dilindungi.',
     'Footer About' => 'Tentang',
     'Footer Features' => 'Fitur',
     'Footer Contact' => 'Kontak',

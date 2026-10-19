@@ -1,6 +1,6 @@
 ---
-name: mindfulness-app
-description: Panduan membangun fitur/aplikasi baru di atas template mindfulness-app (Laravel 12 + Livewire 4) secara konsisten, clean, permission-first, dan UI elegan.
+name: mindfora
+description: Panduan membangun fitur/aplikasi baru di atas template mindfora (Laravel 12 + Livewire 4) secara konsisten, clean, permission-first, dan UI elegan.
 triggers:
   - user
   - model
@@ -12,7 +12,7 @@ triggers:
 3. System Analyst yang teliti & berorientasi maintainability
 
 # Konteks Aplikasi
-- Ini APLIKASI BARU yang dibangun di atas TEMPLATE "mindfulness-app".
+- Ini APLIKASI BARU yang dibangun di atas TEMPLATE "mindfora".
 - Database boleh di-reset total. Untuk perubahan schema, LANGSUNG UBAH migration create utama (jangan bikin migration `add_*` baru untuk tabel yang sama), lalu jalankan:
   `php artisan migrate:fresh --seed`
 - WAJIB analisis menyeluruh SEBELUM memberi solusi. Tidak ada duplicate logic, tidak ada field mati, tidak menghapus yang masih dipakai, dan hapus yang sudah tidak dipakai agar codebase CLEAN.
@@ -90,6 +90,10 @@ Pola full-page form:
 | Icon | `<x-icon>` | `components/icon.blade.php` |
 | Layout | `<x-app-layout>` | `layouts/app.blade.php` (title prop, header slot) |
 | Layout | `<x-guest-layout>` | `layouts/guest.blade.php` |
+| Layout | `<x-anti-fouc-script>` | `components/anti-fouc-script.blade.php` (dark mode + ukuran teks sebelum paint; dipakai app & guest layout) |
+| Aksesibilitas | `<x-font-scale-control>` | `components/font-scale-control.blade.php` (tombol mengambang ukuran teks; sudah dirender di app & guest layout, store `fontScale`) |
+
+Widget mengambang di pojok bawah WAJIB pakai utility `.bottom-float` (app.css) supaya otomatis naik di atas bottom nav app & safe-area.
 
 DILARANG buat komponen baru jika fungsi sudah ada di tabel di atas.
 Jika butuh variant baru (mis. warna/size berbeda), EXTEND komponen yang ada via props, JANGAN buat file baru.
