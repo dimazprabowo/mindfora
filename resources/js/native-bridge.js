@@ -8,10 +8,15 @@ const Capacitor = window.Capacitor;
 if (Capacitor?.isNativePlatform?.()) {
     const { App, Haptics, SystemBars } = Capacitor.Plugins;
 
-    syncSystemBars(SystemBars);
-    handleBackButton(App);
-    initPullToRefresh(Haptics);
-    initTapHaptics(Haptics);
+    // Isolasi tiap init: satu plugin gagal tidak boleh mematikan fitur bridge lain.
+    for (const init of [
+        () => syncSystemBars(SystemBars),
+        () => handleBackButton(App),
+        () => initPullToRefresh(Haptics),
+        () => initTapHaptics(Haptics),
+    ]) {
+        try { init(); } catch (e) { console.warn('[native-bridge]', e); }
+    }
 }
 
 /** Status/navigation bar icon color follows the page background (dark mode or dark auth gradient). */
@@ -87,7 +92,8 @@ function initPullToRefresh(Haptics) {
         const canStart = e.touches.length === 1
             && window.scrollY <= 0
             && !hasOpenOverlay()
-            && !insideScrolledContainer(e.target);
+            && !insideScrolledContainer(e.target)
+            && !e.target.closest?.('[data-ptr-ignore]');
         startY = canStart ? e.touches[0].clientY : null;
         armed = false;
     }, { passive: true });

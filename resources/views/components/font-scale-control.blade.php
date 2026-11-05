@@ -103,6 +103,7 @@
      @pointerup.window="endDrag()"
      @pointercancel.window="endDrag()"
      @resize.window="pos && (pos = clamp(pos.x, pos.y))"
+     data-ptr-ignore
      :class="pos
         ? 'fixed z-50 select-none print:hidden'
         : 'font-scale-fab bottom-float fixed right-4 z-50 select-none print:hidden'"
