@@ -110,6 +110,7 @@ return [
     // Auth shell
     'toggle_dark_mode' => 'Toggle dark mode',
     'back_to_home' => 'Back to Home',
+    'quick_menu' => 'Quick menu',
     'need_help' => 'Need help?',
     'contact_support' => 'Contact Support',
     'all_rights_reserved' => 'All rights reserved.',

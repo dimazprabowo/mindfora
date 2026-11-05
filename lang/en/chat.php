@@ -46,4 +46,7 @@ return [
     'delete_chat_message' => 'This conversation will be deleted for you only. Messages remain visible to other participants. If new messages arrive, the conversation will reappear but only showing the new messages.',
     'delete_message_title' => 'Delete Message',
     'delete_message_message' => 'This message will be deleted for everyone. Deleted messages cannot be restored.',
+
+    // Menu badge
+    'unread_messages' => 'unread messages',
 ];

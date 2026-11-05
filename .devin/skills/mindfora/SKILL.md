@@ -1,6 +1,6 @@
 ---
 name: mindfora
-description: Panduan membangun fitur/aplikasi baru di atas template mindfora (Laravel 12 + Livewire 4) secara konsisten, clean, permission-first, dan UI elegan.
+description: Panduan membangun fitur/aplikasi baru di atas template mindfora (Laravel 13 + Livewire 4) secara konsisten, clean, permission-first, dan UI elegan.
 triggers:
   - user
   - model
@@ -18,7 +18,15 @@ triggers:
 - WAJIB analisis menyeluruh SEBELUM memberi solusi. Tidak ada duplicate logic, tidak ada field mati, tidak menghapus yang masih dipakai, dan hapus yang sudah tidak dipakai agar codebase CLEAN.
 
 # Stack & Versi (JANGAN diganti)
-- PHP ^8.2, Laravel ^12, Livewire ^4.1
+- PHP ^8.5, Laravel ^13, Livewire ^4.1
+
+## Catatan Laravel 13 / PHP 8.5 (sudah diterapkan — ikuti saat menulis kode baru)
+- `Pdo\Mysql::ATTR_SSL_CA` (bukan `PDO::MYSQL_ATTR_SSL_CA`) — lihat `config/database.php`.
+- CSRF middleware = `PreventRequestForgery` (nama lama `ValidateCsrfToken` deprecated).
+- `config/session.php` -> `'serialization' => 'json'` dan `config/cache.php` -> `'serializable_classes' => false`: JANGAN simpan object mentah di session/cache (serialisasi object dinonaktifkan demi keamanan gadget-chain).
+- maatwebsite/excel ^4: method concern WAJIB return type (`query(): Builder`, `collection(): Collection`, `headings(): array`, `map(): array`, `styles(): array`).
+- PHPUnit ^12: pakai atribut `#[Test]` / `#[DataProvider('...')]` (bukan doc-comment `@test`/`@dataProvider`).
+- Parameter nullable WAJIB eksplisit `?Type $x = null` (implicit nullable deprecated di PHP 8.4+).
 - spatie/laravel-permission (role & permission)
 - spatie/laravel-activitylog (audit log)
 - maatwebsite/excel (export Excel)

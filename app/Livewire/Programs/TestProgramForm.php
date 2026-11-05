@@ -8,6 +8,7 @@ use App\Livewire\Traits\HasNotification;
 use App\Models\TestProgram;
 use App\Services\TestProgramService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class TestProgramForm extends Component
@@ -46,6 +47,7 @@ class TestProgramForm extends Component
                 ->get()
                 ->map(fn ($week) => [
                     'id' => $week->id,
+                    'row_key' => 'week-'.$week->id,
                     'week_number' => $week->week_number,
                     'title' => $week->title ?? '',
                     'is_active' => $week->is_active,
@@ -53,12 +55,14 @@ class TestProgramForm extends Component
                     'threshold_medium_max' => $week->threshold_medium_max,
                     'questions' => $week->questions->map(fn ($question) => [
                         'id' => $question->id,
+                        'row_key' => 'q-'.$question->id,
                         'type' => $question->type->value,
                         'label' => $question->label,
                         'is_required' => $question->is_required,
                         'order' => $question->order,
                         'options' => $question->options->map(fn ($option) => [
                             'id' => $option->id,
+                            'row_key' => 'opt-'.$option->id,
                             'label' => $option->label,
                             'score' => $option->score,
                             'order' => $option->order,
@@ -81,6 +85,7 @@ class TestProgramForm extends Component
     {
         return [
             'id' => null,
+            'row_key' => (string) Str::uuid(),
             'week_number' => $number,
             'title' => '',
             'is_active' => true,
@@ -94,6 +99,7 @@ class TestProgramForm extends Component
     {
         return [
             'id' => null,
+            'row_key' => (string) Str::uuid(),
             'type' => 'radio',
             'label' => '',
             'is_required' => true,
@@ -106,6 +112,7 @@ class TestProgramForm extends Component
     {
         return [
             'id' => null,
+            'row_key' => (string) Str::uuid(),
             'label' => '',
             'score' => 0,
             'order' => 0,

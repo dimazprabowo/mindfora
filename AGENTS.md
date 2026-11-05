@@ -8,8 +8,8 @@
 ## 1. Prasyarat (cek sekali sebelum pertama kali jalan)
 
 ```powershell
-# PHP 8.3 + extension yang dibutuhkan Laravel 12
-php -v                                  # harus >= 8.2
+# PHP 8.5 + extension yang dibutuhkan Laravel 13
+php -v                                  # harus >= 8.5
 php -m | findstr /I "pdo_sqlite pdo_mysql openssl mbstring fileinfo gd"   # pastikan semua muncul
 
 # Composer

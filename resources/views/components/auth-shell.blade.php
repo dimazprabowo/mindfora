@@ -12,37 +12,65 @@
 @endphp
 
 <div class="min-h-screen flex flex-col {{ $rowDirection }} relative">
-    {{-- Floating Controls (top-right): Home + Language + Dark Mode. Home hidden in the Android app ('/' redirects to login there). --}}
-    <div class="fixed top-4 mt-safe right-4 z-50 flex items-center gap-2">
-        @unless (is_native_app())
-        <a href="{{ route('welcome') }}"
-           wire:navigate
-           x-data="{ loading: false }"
-           x-on:click="$nextTick(() => loading = true)"
-           x-on:livewire:navigate:end.window="loading = false"
-           :class="{ 'opacity-75 cursor-wait': loading }"
-           class="p-3 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 dark:border-gray-700 inline-flex items-center justify-center"
-           aria-label="{{ __('auth.back_to_home') }}"
-           title="{{ __('auth.back_to_home') }}">
-            <svg x-show="!loading" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 10.5L12 3l9 7.5M5 9.5v10a1 1 0 001 1h3.5v-6h5v6H18a1 1 0 001-1v-10" />
-            </svg>
-            <svg x-cloak x-show="loading" class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-        </a>
-        @endunless
-        <x-language-switcher variant="floating" />
-        <button @click="$store.darkMode.toggle()"
-                class="p-3 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 dark:border-gray-700"
-                aria-label="{{ __('auth.toggle_dark_mode') }}"
-                title="{{ __('auth.toggle_dark_mode') }}">
-            <svg x-show="!$store.darkMode.dark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-            </svg>
-            <svg x-show="$store.darkMode.dark" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+    {{-- Floating Controls (top-right): satu FAB -> expand ke kiri berisi Home + Bahasa + Dark Mode.
+         Home disembunyikan di aplikasi Android ('/' redirect ke login di sana). --}}
+    <div x-data="{ open: false }"
+         @click.outside="open = false"
+         @keydown.escape.window="open = false"
+         class="fixed top-4 mt-safe right-4 z-50 flex items-center gap-2">
+
+        {{-- Menu expand: item meluncur keluar ke arah kiri dari belakang FAB --}}
+        <div x-show="open"
+             x-cloak
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 translate-x-4"
+             x-transition:enter-end="opacity-100 translate-x-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 translate-x-0"
+             x-transition:leave-end="opacity-0 translate-x-4"
+             class="flex items-center gap-2">
+            @unless (is_native_app())
+            <a href="{{ route('welcome') }}"
+               wire:navigate
+               x-data="{ loading: false }"
+               x-on:click="$nextTick(() => loading = true)"
+               x-on:livewire:navigate:end.window="loading = false"
+               :class="{ 'opacity-75 cursor-wait': loading }"
+               class="p-3 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 dark:border-gray-700 inline-flex items-center justify-center"
+               aria-label="{{ __('auth.back_to_home') }}"
+               title="{{ __('auth.back_to_home') }}">
+                <svg x-show="!loading" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 10.5L12 3l9 7.5M5 9.5v10a1 1 0 001 1h3.5v-6h5v6H18a1 1 0 001-1v-10" />
+                </svg>
+                <svg x-cloak x-show="loading" class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </a>
+            @endunless
+            <x-language-switcher variant="floating" />
+            <button @click="$store.darkMode.toggle()"
+                    class="p-3 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 dark:border-gray-700"
+                    aria-label="{{ __('auth.toggle_dark_mode') }}"
+                    title="{{ __('auth.toggle_dark_mode') }}">
+                <svg x-show="!$store.darkMode.dark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                </svg>
+                <svg x-show="$store.darkMode.dark" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+            </button>
+        </div>
+
+        {{-- FAB toggle: ikon titik-tiga berotasi 90 derajat saat menu terbuka --}}
+        <button type="button"
+                @click="open = !open"
+                :aria-expanded="open"
+                class="p-3 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 dark:border-gray-700 inline-flex items-center justify-center"
+                aria-label="{{ __('auth.quick_menu') }}"
+                title="{{ __('auth.quick_menu') }}">
+            <svg class="w-5 h-5 transition-transform duration-200" :class="{ 'rotate-90': open }" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6.75 12a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM13.5 12a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM20.25 12a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
             </svg>
         </button>
     </div>

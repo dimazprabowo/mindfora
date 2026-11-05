@@ -110,6 +110,7 @@ return [
     // Auth shell
     'toggle_dark_mode' => 'Beralih mode gelap',
     'back_to_home' => 'Kembali ke Beranda',
+    'quick_menu' => 'Menu cepat',
     'need_help' => 'Butuh bantuan?',
     'contact_support' => 'Hubungi Support',
     'all_rights_reserved' => 'Hak cipta dilindungi.',

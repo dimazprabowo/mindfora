@@ -154,6 +154,8 @@ class ConsultationIndex extends Component
             ->where('chat_id', $this->activeChatId)
             ->where('user_id', Auth::id())
             ->update(['last_read_at' => now()]);
+
+        $this->dispatch('chat-unread-changed');
     }
 
     public function getListeners(): array

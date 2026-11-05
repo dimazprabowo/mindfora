@@ -13,8 +13,10 @@
 ])
 
 @php
-    $componentId = $id ?? 'multi-searchable-select-' . uniqid();
     $wireModel = $attributes->wire('model')->value();
+    $isLive = $attributes->wire('model')->hasModifier('live');
+    // Deterministic id — uniqid() berubah tiap render dan bisa bikin node ganda saat morph
+    $componentId = $id ?? 'multi-searchable-select-' . md5(($wireModel ?? '') . '|' . $placeholder);
 @endphp
 
 <div 
@@ -22,7 +24,7 @@
         open: false,
         search: '',
         dropUp: false,
-        selectedValues: @entangle($wireModel),
+        selectedValues: @entangle($wireModel){{ $isLive ? '.live' : '' }},
         options: @js($options),
         placeholder: @js($placeholder),
         

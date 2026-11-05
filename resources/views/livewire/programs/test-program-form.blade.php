@@ -61,7 +61,7 @@
             </div>
 
             @foreach($weeks as $weekIndex => $week)
-                <div wire:key="week-{{ $weekIndex }}" x-data="{ open: true }" class="mb-6 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div wire:key="week-{{ $week['row_key'] }}" x-data="{ open: true }" class="mb-6 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
                     {{-- Week Header --}}
                     <div role="button" tabindex="0" @click="open = !open" @keydown.enter="open = !open" @keydown.space.prevent="open = !open"
                         class="w-full bg-gray-50 dark:bg-gray-700/50 px-4 py-3 flex items-center justify-between text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-inset">
@@ -81,7 +81,7 @@
                                     :active="$week['is_active']"
                                     target="toggleWeekActive({{ $weekIndex }})"
                                     activeColor="green"
-                                    wire:key="toggle-week-active-{{ $weekIndex }}"
+                                    wire:key="toggle-week-active-{{ $week['row_key'] }}"
                                     title="{{ __('programs.toggle_week') }}" />
                             </label>
                             <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 transition-transform flex-shrink-0" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,14 +118,14 @@
                                 <x-loading-button type="button" wire:click="addQuestion({{ $weekIndex }})"
                                     target="addQuestion({{ $weekIndex }})"
                                     variant="link" size="sm" icon="plus"
-                                    wire:key="btn-add-question-{{ $weekIndex }}"
+                                    wire:key="btn-add-question-{{ $week['row_key'] }}"
                                     loadingText="{{ __('common.adding') }}">
                                     {{ __('programs.add_question') }}
                                 </x-loading-button>
                             </div>
 
                             @foreach($week['questions'] as $questionIndex => $question)
-                                <div wire:key="q-{{ $weekIndex }}-{{ $questionIndex }}" class="rounded-md border border-gray-200 dark:border-gray-700 p-4 bg-gray-50/50 dark:bg-gray-700/20">
+                                <div wire:key="q-{{ $question['row_key'] }}-{{ $questionIndex }}" class="rounded-md border border-gray-200 dark:border-gray-700 p-4 bg-gray-50/50 dark:bg-gray-700/20">
                                     {{-- Question Header --}}
                                     <div class="flex items-start justify-between gap-3 mb-3">
                                         <div class="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -158,7 +158,7 @@
                                                         :active="$question['is_required']"
                                                         target="toggleQuestionRequired({{ $weekIndex }}, {{ $questionIndex }})"
                                                         activeColor="green"
-                                                        wire:key="toggle-q-required-{{ $weekIndex }}-{{ $questionIndex }}"
+                                                        wire:key="toggle-q-required-{{ $question['row_key'] }}-{{ $questionIndex }}"
                                                         title="{{ __('common.required') }}" />
                                                     <span>{{ __('common.required') }}</span>
                                                 </label>
@@ -168,7 +168,7 @@
                                             wire:click="removeQuestion({{ $weekIndex }}, {{ $questionIndex }})"
                                             target="removeQuestion({{ $weekIndex }}, {{ $questionIndex }})"
                                             variant="icon-red" icon="delete"
-                                            wire:key="btn-remove-question-{{ $weekIndex }}-{{ $questionIndex }}"
+                                            wire:key="btn-remove-question-{{ $question['row_key'] }}-{{ $questionIndex }}"
                                             title="{{ __('programs.delete_question') }}" />
                                     </div>
 
@@ -181,14 +181,14 @@
                                                     wire:click="addOption({{ $weekIndex }}, {{ $questionIndex }})"
                                                     target="addOption({{ $weekIndex }}, {{ $questionIndex }})"
                                                     variant="link" size="xs" icon="plus"
-                                                    wire:key="btn-add-option-{{ $weekIndex }}-{{ $questionIndex }}"
+                                                    wire:key="btn-add-option-{{ $question['row_key'] }}-{{ $questionIndex }}"
                                                     loadingText="{{ __('common.adding') }}">
                                                     {{ __('programs.add_option') }}
                                                 </x-loading-button>
                                             </div>
 
                                             @foreach($question['options'] as $optionIndex => $option)
-                                                <div wire:key="opt-{{ $weekIndex }}-{{ $questionIndex }}-{{ $optionIndex }}" class="flex items-center gap-2">
+                                                <div wire:key="opt-{{ $option['row_key'] }}-{{ $optionIndex }}" class="flex items-center gap-2">
                                                     <div class="flex-1">
                                                         <x-text-input wire:model="weeks.{{ $weekIndex }}.questions.{{ $questionIndex }}.options.{{ $optionIndex }}.label"
                                                             type="text" class="block w-full" placeholder="{{ __('programs.option_placeholder') }}" />
@@ -204,7 +204,7 @@
                                                         target="removeOption({{ $weekIndex }}, {{ $questionIndex }}, {{ $optionIndex }})"
                                                         variant="icon-red" icon="close"
                                                         iconClass="w-4 h-4"
-                                                        wire:key="btn-remove-option-{{ $weekIndex }}-{{ $questionIndex }}-{{ $optionIndex }}"
+                                                        wire:key="btn-remove-option-{{ $option['row_key'] }}-{{ $optionIndex }}"
                                                         title="{{ __('programs.delete_option') }}" />
                                                 </div>
                                             @endforeach

@@ -46,4 +46,7 @@ return [
     'delete_chat_message' => 'Percakapan ini akan dihapus untuk Anda saja. Pesan tetap terlihat oleh peserta lain. Jika ada pesan baru, percakapan akan muncul kembali namun hanya menampilkan pesan baru saja.',
     'delete_message_title' => 'Hapus Pesan',
     'delete_message_message' => 'Pesan ini akan dihapus untuk semua orang. Pesan yang sudah dihapus tidak dapat dikembalikan.',
+
+    // Menu badge
+    'unread_messages' => 'pesan belum dibaca',
 ];

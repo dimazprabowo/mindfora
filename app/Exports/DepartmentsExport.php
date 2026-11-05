@@ -3,6 +3,8 @@
 namespace App\Exports;
 
 use App\Models\Department;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -11,12 +13,14 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class DepartmentsExport implements FromCollection, WithHeadings, WithMapping, WithStyles
 {
+    use Exportable;
+
     public function __construct(
         private ?string $search = null,
         private ?string $statusFilter = null
     ) {}
 
-    public function collection()
+    public function collection(): Collection
     {
         $operator = config('database.default') === 'pgsql' ? 'ilike' : 'like';
 

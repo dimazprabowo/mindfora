@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Chat extends Model
@@ -76,7 +76,7 @@ class Chat extends Model
             ? $this->participants->firstWhere('id', $userId)
             : $this->participants()->where('users.id', $userId)->first();
 
-        if (!$participant) {
+        if (! $participant) {
             return 0;
         }
 
@@ -86,6 +86,30 @@ class Chat extends Model
             ->where('user_id', '!=', $userId)
             ->when($lastReadAt, fn ($q) => $q->where('created_at', '>', $lastReadAt))
             ->count();
+    }
+
+    /**
+     * Total unread messages across ALL chats for the menu badge.
+     * Single query: join messages -> participant pivot, honor per-user
+     * last_read_at & deleted_at (soft-delete hides earlier messages).
+     */
+    public static function totalUnreadCountForUser(int $userId): int
+    {
+        return (int) ChatMessage::query()
+            ->join('chat_participants', function ($join) use ($userId) {
+                $join->on('chat_messages.chat_id', '=', 'chat_participants.chat_id')
+                    ->where('chat_participants.user_id', $userId);
+            })
+            ->where('chat_messages.user_id', '!=', $userId)
+            ->where(function ($q) {
+                $q->whereNull('chat_participants.last_read_at')
+                    ->orWhereColumn('chat_messages.created_at', '>', 'chat_participants.last_read_at');
+            })
+            ->where(function ($q) {
+                $q->whereNull('chat_participants.deleted_at')
+                    ->orWhereColumn('chat_messages.created_at', '>', 'chat_participants.deleted_at');
+            })
+            ->count('chat_messages.id');
     }
 
     public static function findDirectChat(int $userA, int $userB): ?self

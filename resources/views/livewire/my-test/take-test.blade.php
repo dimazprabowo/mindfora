@@ -106,7 +106,7 @@
         @endforeach
 
         {{-- Action Bar --}}
-        <div class="sticky bottom-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-3 sm:p-4 -mx-4 sm:mx-0 sm:rounded-lg sm:shadow-sm">
+        <div class="sticky bottom-3 sm:bottom-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 sm:p-4 rounded-lg shadow-lg">
             <div class="flex flex-col sm:flex-row sm:justify-between gap-2.5 sm:gap-3">
                 <x-loading-button wire:click="cancel" target="cancel" variant="secondary" size="md"
                     loadingText="{{ __('my_test.saving') }}" class="w-full sm:w-auto">
