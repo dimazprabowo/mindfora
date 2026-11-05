@@ -135,6 +135,15 @@ npm run dev
 ```
 Lalu akses via `http://127.0.0.1:8211` (Vite dev server otomatis inject HMR).
 
+### Verifikasi gesture pull-to-refresh
+
+```powershell
+node --test tests/native-bridge.test.mjs
+php artisan test --compact --filter=NativeAppTest
+```
+
+Test Node memeriksa state handler custom refresh, bukan gesture browser asli. Setelah deploy dan build asset, tetap uji Chrome Android serta WebView: tarik dari konten paling atas harus refresh; drag tombol font-size tidak boleh refresh; gesture konten berikutnya harus tetap bisa refresh.
+
 ## 8. Cek Status Proses (kalau ragu ada yang mati)
 
 ```powershell

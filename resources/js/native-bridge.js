@@ -88,7 +88,14 @@ function initPullToRefresh(Haptics) {
         indicator.style.transform = 'translate(-50%, -48px)';
     };
 
+    const reset = () => {
+        startY = null;
+        armed = false;
+        hide();
+    };
+
     document.addEventListener('touchstart', (e) => {
+        reset();
         const canStart = e.touches.length === 1
             && window.scrollY <= 0
             && !hasOpenOverlay()
@@ -100,10 +107,13 @@ function initPullToRefresh(Haptics) {
 
     document.addEventListener('touchmove', (e) => {
         if (startY === null) return;
+        if (e.touches.length !== 1) {
+            reset();
+            return;
+        }
         const distance = e.touches[0].clientY - startY;
         if (distance <= 0 || window.scrollY > 0) {
-            startY = null;
-            hide();
+            reset();
             return;
         }
         const pull = Math.min(MAX_PULL, distance * 0.5);
@@ -114,13 +124,15 @@ function initPullToRefresh(Haptics) {
         show(pull);
     }, { passive: true });
 
+    document.addEventListener('touchcancel', reset, { passive: true });
+
+    document.addEventListener('livewire:navigating', reset);
+
     document.addEventListener('touchend', () => {
         if (startY === null) return;
-        startY = null;
-        if (!armed) {
-            hide();
-            return;
-        }
+        const shouldRefresh = armed;
+        reset();
+        if (!shouldRefresh) return;
         show(THRESHOLD, true);
         window.location.reload();
     });

@@ -167,6 +167,8 @@
 
     <button type="button"
             @pointerdown="startDrag($event)"
+            @touchstart.stop
+            @touchmove.stop.prevent
             @contextmenu.prevent
             @click="if (justDragged) { justDragged = false } else { open = !open }"
             :aria-expanded="open"
