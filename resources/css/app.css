@@ -74,6 +74,7 @@ button, a, [role="button"], label[for], select, summary {
 /* Page-level scrollbar (scroll vertikal halaman) — gaya sama dengan .custom-scrollbar.
    Ditargetkan ke html karena scroll root; .dark ada di elemen html yang sama. */
 html {
+    overscroll-behavior-y: none;
     scrollbar-width: thin;
     scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
 }
@@ -141,7 +142,6 @@ html:has([data-floating-player]:not([x-cloak]):not([style*="display: none"])) .f
 
 /* Mindfora Android app (html.native-app, lihat helper is_native_app()) */
 .native-app body {
-    overscroll-behavior-y: none;
     -webkit-tap-highlight-color: transparent;
 }
 
