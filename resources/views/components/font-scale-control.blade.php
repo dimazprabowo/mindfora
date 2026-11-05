@@ -29,6 +29,10 @@
                 }
             } catch (e) {}
         },
+        destroy() {
+            document.documentElement.style.overscrollBehaviorY = '';
+            document.body.style.overscrollBehaviorY = '';
+        },
         clamp(x, y) {
             const w = this.$el.offsetWidth || 56, h = this.$el.offsetHeight || 56;
             return {
@@ -45,6 +49,8 @@
             const rect = this.$el.getBoundingClientRect();
             this.drag = { startX: e.clientX, startY: e.clientY, offX: e.clientX - rect.left, offY: e.clientY - rect.top };
             this.dragging = false;
+            document.documentElement.style.overscrollBehaviorY = 'none';
+            document.body.style.overscrollBehaviorY = 'none';
         },
         onDrag(e) {
             if (!this.drag) return;
@@ -59,6 +65,8 @@
             this.drag = null;
             this.dragging = false;
             this.holding = false;
+            document.documentElement.style.overscrollBehaviorY = '';
+            document.body.style.overscrollBehaviorY = '';
             if (wasDragging || wasHolding) {
                 this.justDragged = true;
                 if (wasDragging) this.snapToEdge();
